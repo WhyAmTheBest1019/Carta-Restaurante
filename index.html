@@ -186,7 +186,7 @@ html:not(.js) .quick{display:none}
   display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 10px 8px 12px;
   border-radius:999px;background:var(--card);border:1px solid var(--line-soft);
   box-shadow:0 6px 16px -12px rgba(var(--shadow),.7);
-  color:var(--ink);text-decoration:none;font-weight:800;font-size:.86rem;
+  color:var(--ink);text-decoration:none;font-weight:800;font-size:.86rem;white-space:nowrap;
   animation:pop .6s calc(.6s + var(--i,0) * 50ms) var(--spring) backwards;
   transition:transform .25s var(--spring),border-color .2s;
 }
@@ -251,7 +251,6 @@ section{padding-top:56px;scroll-margin-top:calc(var(--nav-h) - 38px)}
   font-family:'Fraunces',serif;font-weight:600;
   font-size:clamp(2rem,8.5vw,2.8rem);line-height:1.04;letter-spacing:-.015em;color:var(--ink);
 }
-.sec-cat{font-family:'Fraunces',serif;font-style:italic;font-size:1rem;color:var(--muted);margin-top:4px}
 .sec-head .rule{width:60px;height:3px;border-radius:3px;margin:14px auto 0;background:linear-gradient(90deg,var(--accent),var(--gold))}
 .sec-count{
   display:inline-block;margin-top:12px;font-size:.66rem;font-weight:800;
@@ -312,7 +311,6 @@ ul.list{list-style:none}
   color:var(--accent-d);background:var(--tint);border:1px solid rgba(168,57,42,.2);
   padding:2px 7px;border-radius:999px;white-space:nowrap;
 }
-.dish-cat{font-style:italic;font-size:.76rem;color:var(--muted);margin-top:3px;line-height:1.3}
 .leader{display:none}
 .price{
   font-family:'Fraunces',serif;font-weight:700;color:var(--price);font-size:1.06rem;
@@ -351,10 +349,6 @@ ul.list{list-style:none}
 .row:last-child,.t3:last-child,.t2:last-child{border-bottom:0}
 .row .name{flex:1;min-width:0}
 .name{font-weight:700;font-size:.97rem;line-height:1.3;color:var(--ink)}
-.name .cat,.subhead .cat{
-  display:block;font-family:'Mulish',sans-serif;font-weight:500;font-style:italic;
-  font-size:.74rem;color:var(--muted);margin-top:2px;line-height:1.3;letter-spacing:0;
-}
 .subhead{
   font-family:'Fraunces',serif;font-style:italic;font-weight:600;color:var(--gold);font-size:1.22rem;
   padding:18px 16px 8px;border-bottom:1px solid var(--line-soft);
@@ -416,6 +410,7 @@ footer p{font-size:.7rem;color:var(--muted);letter-spacing:.12em;text-transform:
 .dock{
   position:fixed;z-index:50;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));
   transform:translateX(-50%);display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;
+  width:max-content;max-width:calc(100vw - 16px);white-space:nowrap;
   background:var(--dock-bg);color:var(--dock-ink);
   box-shadow:0 20px 40px -14px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.12);
   transition:transform .45s var(--ease-out),opacity .3s;
@@ -431,14 +426,32 @@ html:not(.js) .dock{display:none}
 }
 .dock button:active{transform:scale(.9)}
 .dock .d-search{background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;padding:0 16px 0 14px}
-.lang{position:relative;display:flex;padding:3px;border-radius:999px;background:rgba(127,127,127,.2)}
-.dock .lang button{position:relative;z-index:1;width:40px;min-width:0;height:38px;padding:0;font-size:.74rem;letter-spacing:.06em;transition:color .3s}
-.dock .lang button[aria-pressed="true"]{color:var(--dock-bg)}
-.lang .knob{
-  position:absolute;top:3px;left:3px;width:40px;height:38px;border-radius:999px;
-  background:var(--dock-ink);transition:transform .45s var(--spring);
+.dock .d-lang{gap:6px;padding:0 13px 0 11px;background:rgba(127,127,127,.2);font-size:.78rem;letter-spacing:.04em}
+.dock .d-lang[aria-expanded="true"]{background:var(--dock-ink);color:var(--dock-bg)}
+.lang-menu{
+  position:fixed;z-index:55;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));
+  width:min(260px,calc(100vw - 32px));padding:8px;border-radius:22px;
+  background:var(--card);border:1px solid var(--line-soft);
+  box-shadow:0 24px 50px -16px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.08);
+  opacity:0;visibility:hidden;transform:translate(-50%,12px) scale(.96);transform-origin:50% 100%;
+  transition:opacity .2s,transform .3s var(--spring),visibility 0s linear .3s;
 }
-.lang[data-lang="ca"] .knob{transform:translateX(40px)}
+.lang-menu.open{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1);transition:opacity .2s,transform .35s var(--spring),visibility 0s}
+.lm-title{padding:8px 12px 6px;font-size:.66rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.lang-menu button{
+  display:flex;align-items:center;justify-content:space-between;width:100%;height:48px;padding:0 14px;
+  border:0;border-radius:14px;background:none;color:var(--ink);font-size:1rem;font-weight:700;cursor:pointer;text-align:left;
+  transition:background .2s;
+}
+.lang-menu button:active{background:var(--tint)}
+.lang-menu button[aria-checked="true"]{background:var(--tint);color:var(--accent-d)}
+.lm-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--line)}
+.lang-menu button[aria-checked="true"] .lm-check{
+  border-color:var(--accent);
+  background:var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12.5 4 4 8-9'/%3E%3C/svg%3E") center/13px no-repeat;
+}
+@media (hover:hover){.lang-menu button:not([aria-checked="true"]):hover{background:var(--tint-2)}}
+body.searching .lang-menu{display:none}
 .dock .d-top{width:0;min-width:0;padding:0;opacity:0;overflow:hidden;pointer-events:none}
 .dock.scrolled .d-top{width:44px;opacity:1;pointer-events:auto}
 .i-sun{display:none}
@@ -483,7 +496,7 @@ body.searching .searchbar{transform:none;visibility:visible;transition:transform
 .sb-meta{max-width:688px;margin:6px auto 0;padding:0 4px;min-height:1.3em;font-size:.72rem;font-weight:700;color:var(--muted)}
 body.searching .hero,body.searching nav,body.searching .sec-tools,body.searching .hint,
 body.searching .sec-note,body.searching .sec-head .num,body.searching .sec-head .rule,
-body.searching .sec-count,body.searching .sec-cat{display:none}
+body.searching .sec-count{display:none}
 body.searching main{padding-top:calc(var(--search-h) - 8px)}
 body.searching section{padding-top:26px}
 body.searching .sec-head{margin-bottom:12px;text-align:left}
@@ -537,7 +550,6 @@ body.searching.no-results .empty{display:block}
 .lb-info{padding:18px 22px 24px}
 .lb-count{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:var(--gold)}
 .lb-name{font-family:'Fraunces',serif;font-weight:600;font-size:1.85rem;line-height:1.08;letter-spacing:-.01em;margin-top:6px;color:var(--ink)}
-.lb-cat{font-family:'Fraunces',serif;font-style:italic;color:var(--muted);margin-top:4px}
 .lb-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
 .lb-units{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-d);background:var(--tint);border-radius:999px;padding:5px 11px}
 .lb-units[hidden]{display:none}
@@ -547,6 +559,18 @@ body.searching.no-results .empty{display:block}
 @media (hover:hover){.lb-hint{display:none}}
 @media (min-width:600px){.lb{align-items:center;padding:24px}.lb-card{border-radius:28px;transform:translateY(40px) scale(.96);opacity:0;transition:transform .45s var(--ease-out),opacity .3s}.lb.open .lb-card{opacity:1}.lb-grab{display:none}}
 @media (max-height:560px){.lb-media{aspect-ratio:auto;height:50vh}}
+
+/* ---------- CHINO: letras del sistema, sin cursivas ---------- */
+:root:lang(zh){
+  --cjk-sans:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Noto Sans CJK SC","Source Han Sans SC","Microsoft YaHei",sans-serif;
+}
+:lang(zh) body{font-family:'Mulish',var(--cjk-sans)}
+:lang(zh) .hero h1{font-family:'Fraunces',var(--cjk-sans)}
+:lang(zh) .sec-head h2,:lang(zh) .tile .t,:lang(zh) .subhead,:lang(zh) .lb-name,
+:lang(zh) .price,:lang(zh) .c,:lang(zh) .lb-price{font-family:'Fraunces',var(--cjk-sans);font-weight:700}
+:lang(zh) .subhead{font-style:normal}
+:lang(zh) .eyebrow,:lang(zh) .quick-label,:lang(zh) .hero .sub,:lang(zh) .sec-count,:lang(zh) .lb-count,:lang(zh) .lm-title{letter-spacing:.12em}
+:lang(zh) .head .c{letter-spacing:.02em;font-size:.72rem}
 
 /* ---------- CAMBIO DE TEMA ---------- */
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
@@ -581,12 +605,12 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
   <header class="hero">
     <div class="hero-bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
-    <div class="eyebrow" data-ca="Bar · Restaurant">Bar · Restaurante</div>
+    <div class="eyebrow" data-ca="Bar · Restaurant" data-en="Bar · Restaurant" data-fr="Bar · Restaurant" data-zh="酒吧 · 餐厅">Bar · Restaurante</div>
     <!-- ▼▼▼ CAMBIA EL NOMBRE DE TU RESTAURANTE AQUÍ ▼▼▼ -->
     <h1>La <em>Cronica</em></h1>
     <!-- ▲▲▲ CAMBIA EL NOMBRE DE TU RESTAURANTE AQUÍ ▲▲▲ -->
     <div class="flourish"><span>✦</span></div>
-    <p class="sub" data-ca="Cuina de sempre · Tapes, menjar xinès i plats combinats">Cocina de siempre · Tapas, comida china y combinados</p>
+    <p class="sub" data-ca="Cuina de sempre · Tapes, menjar xinès i plats combinats" data-en="Home-style cooking · Tapas, Chinese food &amp; combo plates" data-fr="Cuisine traditionnelle · Tapas, cuisine chinoise et assiettes composées" data-zh="传统家常菜 · 西班牙小吃、中餐与套餐">Cocina de siempre · Tapas, comida china y combinados</p>
     <div class="quick">
       <p class="quick-label" data-i18n="food">Para comer</p>
       <div class="food-tiles" id="food-tiles"></div>
@@ -597,17 +621,17 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
   <nav>
     <div class="scroller">
-        <a href="#tapas" data-target="tapas">Tapas</a>
-        <a href="#combinados" data-target="combinados">Combinados</a>
-        <a href="#china" data-target="china">Comida china</a>
-        <a href="#bocadillos" data-target="bocadillos">Bocadillos</a>
-        <a href="#vinos" data-target="vinos">Vinos &amp; cavas</a>
-        <a href="#cerveza" data-target="cerveza">Cerveza</a>
-        <a href="#cafe" data-target="cafe">Café &amp; té</a>
-        <a href="#refrescos" data-target="refrescos">Refrescos</a>
-        <a href="#copas" data-target="copas">Copas</a>
-        <a href="#cubatas" data-target="cubatas">Cubatas</a>
-        <a href="#gintonic" data-target="gintonic">Gin-tonic</a>
+        <a href="#tapas" data-target="tapas" data-ca="Tapes" data-en="Tapas" data-fr="Tapas" data-zh="小吃">Tapas</a>
+        <a href="#combinados" data-target="combinados" data-ca="Combinats" data-en="Combo plates" data-fr="Assiettes" data-zh="套餐">Combinados</a>
+        <a href="#china" data-target="china" data-ca="Menjar xinès" data-en="Chinese food" data-fr="Cuisine chinoise" data-zh="中餐">Comida china</a>
+        <a href="#bocadillos" data-target="bocadillos" data-ca="Entrepans" data-en="Sandwiches" data-fr="Sandwichs" data-zh="三明治">Bocadillos</a>
+        <a href="#vinos" data-target="vinos" data-ca="Vins i caves" data-en="Wine &amp; cava" data-fr="Vins &amp; cava" data-zh="葡萄酒">Vinos &amp; cavas</a>
+        <a href="#cerveza" data-target="cerveza" data-ca="Cervesa" data-en="Beer" data-fr="Bière" data-zh="啤酒">Cerveza</a>
+        <a href="#cafe" data-target="cafe" data-ca="Cafè i te" data-en="Coffee &amp; tea" data-fr="Café &amp; thé" data-zh="咖啡与茶">Café &amp; té</a>
+        <a href="#refrescos" data-target="refrescos" data-ca="Refrescos" data-en="Soft drinks" data-fr="Sans alcool" data-zh="软饮">Refrescos</a>
+        <a href="#copas" data-target="copas" data-ca="Copes" data-en="Spirits" data-fr="Spiritueux" data-zh="烈酒">Copas</a>
+        <a href="#cubatas" data-target="cubatas" data-ca="Cubates" data-en="Mixed drinks" data-fr="Long drinks" data-zh="调酒">Cubatas</a>
+        <a href="#gintonic" data-target="gintonic" data-ca="Gintònic" data-en="Gin &amp; tonic" data-fr="Gin tonic" data-zh="金汤力">Gin-tonic</a>
     </div>
   </nav>
 
@@ -620,17 +644,16 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     </div>
 
     <section id="tapas">
-      <div class="sec-head"><div class="num">I</div><h2>Tapas</h2><div class="sec-cat">Tapes</div><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">I</div><h2 data-ca="Tapes" data-en="Tapas" data-fr="Tapas" data-zh="西班牙小吃">Tapas</h2><div class="rule"></div></div>
       <ul class="list">
       <li class="dish reveal">
         <span class="thumb"><img loading="lazy" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAFoAWgDASIAAhEBAxEB/8QAHAAAAQUBAQEAAAAAAAAAAAAAAAECAwQFBgcI/8QATBAAAQMDAwIDAggLBQYFBQAAAQACEQMEIQUSMUFRBhNhInEHCDKBkZTR0hQVFxhCRVJVVpOhI0aDhLEWMzZic+E1ZNPw8SUmRHSC/8QAGQEBAQEBAQEAAAAAAAAAAAAAAAECAwQF/8QAJREBAQACAgIDAQADAQEBAAAAAAECERIhAzEEQVETImFxFDJS/9oADAMBAAIRAxEAPwD6pQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAQhCAyhfOlP41GrPj/7RtB/n3/8Apqwz4z2qv58J2g/zz/8A01Nmn0GheBD4yupkSfC1p9dd9xOHxk9T/ha1+uu+4pyi6e9oXg35yWp/wta/XXfcR+cjqf8AC1r9dd9xOUNPeULwf85DU/4XtfrrvuJfzj9T/he1+uu+4nKGq93QvCPzj9TP917X6677iUfGO1M/3XtfrrvuJyhqvdvnR868J/ON1P8Ahe1+uu+4l/OM1P8Ahi1+uu+4ryhp7qjK8LHxjNS/hm1+uO+4l/OJ1Mn/AIZtfrjvuJyhqvc0Lw784jUv4ZtfrjvuI/OI1I4/2atfrjvuJs09xyheHH4w+pT/AMM231x33Ev5w2p9PDVr9cd9xNmnuCF4h+cLqZ/u1a/XHfcS/nCal/DVt9cd9xNmntyF4l+cHqX8NW31x33En5w2ofw3bfXHfcTZp7cheI/nB6hP/Ddt9bd9xOHxg78/3ctvrjvuJs417Yj514dcfGLvLcDf4ct8/wDm3fcUH5yt2Zjw1QP+bd9xYvkxnurwye8IXhX5yN5sDj4atxP/AJt33ED4ydzOfDtuP8277in9cP04ZPdULwwfGSrEx+ILcf5p33FPS+MRcVfk6Haz/wDtu+4tTyY37OFe2IXjLfh9vHDGhWh/zbvuJ4+Ha/dx4ftvrbvuK8oca9jQvHR8Ot/+4Lb6277iX8u19+4Lf6277icoca9hQvHvy6337gt/rbvuI/LrffuC3+tu+4nKHGvYULx8/Dregx+ILf6077iPy6Xs/wDgNv8AWnfcTlDjXsE+iF4/+XS9/cNv9ad9xH5dbyf/AAG3+tO+4nKHGvYELyD8ul5+4bf6077iD8Ol5+4bf6077qcoca9fQvIPy6Xn7hofWnfdS/lzvf3DQ+tO+6nKHGvXp9ELx5/w73rf1Bb/AFp33EJyhwrwO3sWxwtCjZtEeyFPQoAK4yn6Lna6cYpi1aAPZTxatEez/RXRS78p4pzypavFR/Bm9kptm9gr4pBHleibTSj+DtPQJfwdsRCu+WAUnlJKulP8Hb2R5DejVaLWjEKPPRNmkXlNEYCQtpjoiq+nRBdUcGjkyeVQratSkig01T6cKXOT2vFeOwCNqhfXpM+U5oVBrNQvTyKbewU1LQi/NRznFccvkSLMDn6na03cz7lGdYa8kU6LiOhV+jolNgHsAn3K3T0toOGhcb8xr+bDN/cuHsWxS+dqL+GAfOuibpzRw3Kmp2bWj5IXK/MrU8TmQ3UXRlqXyNQP6YHzLqG2bQeAnGzb2WP/AGZL/KOV/BdQ48zHuQLK/Gd8rqxZCMgJws2joFJ8vI4Rzdtp95uBe72VoPtmUmgytk24bSJ4WPcAOqtaD1Xr8PnuU7ZuOiPsGVhuLZ+ZINMaG4YtinSaGtbOYT/IAXh8nkytdscZph/i1sZbhNdpdMn5AW75ISGiFz/pk1xc+7R6Z/RH0KB+isJw2COy6Y0RPAEKN1ALU82UpwjlXaPUB/s6lQH3pKY1CzJ2v3js5dSKGcDKjq2e+PZC64/IyjPCMBmuXFIxWt5HcK/a6vZ3J27tjuIdhS1bBjgfZExlUa2kNfw2PVdsflVi+JtsptflpB9xS+TB4C5kUL2zqTb13R2dwVpWviB9Jwp31LaT+kOF6cfPKxcNNM25/wC6UUJVijUp3NMPpPD2nqE/YB0krrLtnSobeDM8oFHKtbOUbFTSr5OcBO8juFYIEHKSMIK5o44SmirESjaChpVfQBEwhWQMQQhUYFJohWGgR2ULTEcJ+/EKM9JWiOqeCot8INUDjlDSfEJheB1URqk9VXrXVKiCalQD0UtNLfnenCSrUbtkuDfeVi1dXfVbFrRcScbncJG6fcXjt1es8+g4XPLzYz21MVupq1qx5YHFzh0Cmq1yLR1drYIEgHom2mkU6MQz51qMsadSk6m9uHCCuGXye9NTFytvp1bU3irXqF27hs4C1bbSW0cBowp6VjU0mqATNNxwR0WpSpseA4ZByvH5PPb06TBTpWe2MQrTLf0hWmUgDwceqlFMTxlee5Wt6V2W/ZqmbR2mYUzW5Um0HoEi6VW0dxyn+UB0Cm2COyXZxhSxdIhSHaEvlhTEHGAlA7gIiEU4QGfOVKWyZlN2wkDLkhtB2OnK56mfMvGQeq3NSqCjaOdK5zT3Va1800xwcr2eO6xc77dIWw4eiV5DIJnKVoOC6ZT47rhe3YzZ6FIRgpzgXZBSgFwys6UxrQ5sqF9Qb9obKstbzhNqllJu9+OnCXEnVRhkjmJTBSe0mcg4VhoBaCMgpKjSY2mITaq5pY4yVG62BVstkADlOFP0Up0zHWIJ4UFXSG1QQW/TldDTtd/OAn1adOi2SrjbvbllpyQ0y40w+ZQqlrG5LDwVtWtb8It2VIAkdFU1ivupua2cqPRbh1O1FOrwJX0vj52ztwvtpjMhCy77xBRs6oljnM/ScBwrtne0L6i2rQqBwP0hemZypqpuvEhHHfKCYQcei2EOClHJKQoJSnoRlCCfehEc6ClLkyUFyIfvJTK9xToML6jw1sdVSvtUZaDayKlUn2WhVKdrUvqralclzpwDwFyy8kjUiWvqlW7G2zYWg8vI4S2ukBxL6u6o853OWhbWQYIgD3LSp0OF4/J5/wAbmKtb6exoENV6lbRAjhTUKI44VxtMAARwvLcttyK9OjA4CsMpRlSMZIUgbPRY7VG+3p1qZY8Ag8eiznUqunVNpH9keCtlwDIPJQ6k2u3ZUEtKuWPKf7WKlKHiW5CmazPEqpUo1NNqjBdRPDuyu0agc0OB5XKflav+hthOAgSlgx3SgSFqTSGwlCOiWJKXa7BzmcJCl4SkKIZmOEhwMpxJHVNccd1rFGV4gdtsoHJKzvDLD5lR5HuVrxC8mgAAclSeHqQZaF0EFxXXfQ1OkH+iRjNnUpxERA96dxEiVjToTkcIa1OiEreOcqhrCHOI7KK4I3bXslvdTgDPfukdDgQeCpTrZjQ2BtEj0SBpnKkYxrGQOApGU5iByptdxD5ftBWGUJyQpvLYwbnLOvNVY0HaYAWb17YuW/S1Xu20RAjCxr7VAZgysXUdf3Pcxh3E9ilsKNa9HmFpPcnqtePC5XdTKSLLd907AJHVWPI8tkcK1Sost6YDR70yp6yV2y8vGccUnj+6xL2hvBB4WOxtzpdz+E2j9rhy0/Jd8y6etSnJCo17UO7ZWcPJZdrcVrSfE1C/LaFceRc8bXcO9xWyR34XEXenSdzRlpkEYgq9pXiWrYhlrqINWlMCtHtN96+h4vPv245YadRENSA9ErS19MVKTg9jhLXDIITT7JBXptYOBzhCThCDmN2YWRqGq1HVzaWuHDFSp+z6BO1S/dRAt6Dx57+vO1p5P2JmnWG0bnSSTJJ6lcfJ5NEh1hp4aJdL3HknqtuhaljfkptvbkdBPZaNFknJK8GedrrMRSoyAOOuFdpsOzHPSUxgAIgYVhoM8ZXFvR1CkQ323BzieimZE4TGNgx3UoaCQho4DAjlSNxwmgKRqgcGmJKcxvKQw9h3TIyFFQdWMteyB09yu9CSswXVB9F8gERKzzb1NNdEmpROJ6haYxycp+HHa4AiOIUs2m9K1MgtDm8FPJDWOdMwormg61E0g40jzHROY4PaO0LF3OmiUqjardw4UhO0wmsYGYaISwk2F4mU3JySErnAACJ7pMcKW9gc5jG5mVE8yJBwpHKCtDREwY4WojF18+w0CJJWnp1LyrOm3gwsjVAataizu5dBTphlNoHQLrPSlA6JwBlAxk5St7qNFiBMpInolqN3jYfknkJzWGMYAUvZ6NAIEdEgp7lK0TwQp6dCRLsDup7S1FSolxEqw4U6DJJAKStc06DOQMLmNZ15tMOh6xyk6T2u6trFOixx3jgriLvWLi+qmlbtJBJEhWqVne688nLKIPJ6ro9P0O102mNrQ53VxC1Mdd5e2mHo3ht5La13MHO3qukbTFFgYwBoGMKYkZTHRhauV+iSIjlRuGeFMR1CYSM4WbGkLhPKgqUvZ4VvdBmBCq1HVfNiA5vMqehTq0W7ePaHKzL2xDwQBg4z1W5VALTg5VWq2W7SOvK3jnZWbGXo2sVdCq+TVcXWbjkEfI9y7BhpXNBte3eH03Zx09Vx95bteCISaBqtXRr0UKjj+D1DDZ4afsXu8Hn+q4Z4fjsD0QpSGXFPzqMx+k3she6OW3mmm2VSo4163tVHnc6epXRUKAaySOM46qhpl1TexsiFt0HU3Ae1Er5Plz3dOshLcPcPbp7XE4J7K4wEgAYKGMDhg8KwKZHELhv7dDqDAXDcPRKxzvwg0y0gT7J7pWMkKem2IPVO1hzAJmf/AJT2uGw846JoYA5x6kyU8DPorUPcWsYHEmU4Qe6b0Th0UQ5sAcdU8EDkSmcBK0yYPdVTjOYiUu7qOqRzgHABvs9SnVajadLeRgZKn+0PpvxBAI6gqvc25ojzKDZbOW9k6nVDxIIypw/r/qruZe0VGvkT3RypaltvJqUz7XO1Q7oOeVmzTUO24mQB6pkiMEFDiHcpoECFj7UpOFQ1DzHvY9jojBVtxj51TuH4WlkZzGmvqlFp6ZXQ1nBjfYG5yxdLYamo1KhHyGwtsOHbK37i60BLgJwU4ARkpG5jqU5gPvV2gAnIUrKbnY5T6VBzzkABTPq0rVkudkLO/uly+oZStKdGHOAHoq+oanSoMgFZ+o65JLKUkxwOVnt0u6v3h90802dgclcuVvWJx/VS91ave1fJtwXuOBHROsvDZdU8/UH73dGdAtq2srezbto02gjBPVTHnK3jjxXaNjG02hrGhrRwAh43DaeJlJXuGUNodJLjGE7dIOFd7va6IRtafZJI6KN0/pN2k8SpCSGgHMdUypBO4iSqGOkNMDPZRubAE89U9x2tnoOyTnopoNDQGuJ6KpSqGtuDpkHsrbsznlRAAAhohLCIHtEdVA9klW6kNxIknCie2DjKy0z7inuExAhZN9atqMIPP+i3arZBwqNdktj+q6YZarFh3hjXajKrrSu7dUp8E/ptQsW43WtzTuWDLHdOx5QvpYeW6efLDdWLXSLi2aAC1/qFepCpSI3NIKuUACIn3QFcpCcEYXizmOVa7UKd05vVWqd65vJUjrClWBL6Ya49jCj/ABTJinVLSf2shcL4r9N8p9rVO/8AcSrVG/puIBG0rm7mjqVnWaDQFZrhg0zJHvlObcVx8u3rsI5lqx/nj7a/xrr6Bp1Th4Uh2g7QZK5W11Zg+RVBM9CtKlqe72pyn9P2JxbIb2TtoB4wqNHUxw6FbZeUn84WplKiQdUB2I4StqU3N+V1hPLJ4iVr/iGThDvbpuZyHCE7aRBzCbHVN76U1jG02hrZgKQEQkHEQjaQtFPY/aQRKKtJtYSAGv790wHCcD68JEVHgscQ7BHRN3QFbfsqiHDjgqnWBouDSOVjLH7iymVHwDgqhcvwVbe4GR9Cz7t2FGpO1rR6fsVKnVxAWltVbTKRFpTjrz65WrRtN3tPwFqTcW2RBSpOdwFbZbspNl/RRV7+jaS2n7TuwVGo65vSS93lMPblZueuoz3Vi91inS/s6Yl3EBZrqN5fndVPlM/qVao21GiDtYN37R5KlcC5paeD6rMwt7rU1Fe3sbe2zTYC6PlHKmJTgNrQJ4TYifaJldJNJTRyfVEANJJGMoPM9IhNMxjjqqGkh4kQfeEpwkJnAKQnKdNAj2twJHomOwecpxEdk1xAx1UDHDImU05TnHE9k2DEgpA1xDGyXY9yYf8AVOdB5mE17oA2gT6peqUx/fsonQPepTkwmFjp4P0LJFeoMFUqzVfeIPRVqoBnA+ZPs2x7yluacf8AyhW61FxbHQlC9OGXTmu0oiIOVap4yMwq9Ed8FWmATHGJXHTKVhjn/wCVK3J6KEGT0UonuFe1PY3c6QOcT3T2s4nCYJPPRObBP/da2hj9JsqxJfbUiT125ULNGs6byAHjMbd5wr4bMSCSOkpzpJzz/qmpV7Z1TSXtY4UbgtceC4TChttO1KiHCrXpVuxAhbAAJ7kKVrIErlfFK1KzKf4bTy6nOOhUrL6vT+VTf9CubgSQDMYKOOVn+X5U2h/GTwWuh20cgjlWqWoUqgAcADKjbHUA+9IabT+i1amN/V6T1b5rHw1gI6ulP81tTIcFVcxg+UGygUmfsgeqTcTpb2yOQmnBVeAwSXR056pwLh1K1o0mbuM9gmucCIdB96YCYJlGIxPdXRVWvbloLm+0306LOrswcCFttbB5OVn6hZ1KTX1mkFpEBkZJ/wDZUuO4sq9ot5RqWVN7W7iBEeqsVqlavhztrR0C5/QKlfT7U0q9N7TuJAcFss1Km7lh+hZ39Us+4e2kynlrcnqeUp4+1RfjCmTHllJ+G0icMcksXtLGO6AO5UJvafRjvpTDdtJ+S7Pqtbh2sgbyAO8KN1Wk2q6iXw8HIUBu+wI+dROqMJLiwT3UpqrrwAYnhRu559yrG4d2EJDWkSXZ7Qr0siw7BmE0mZhVDWcJ9oppe7PtFT0Lm8NHST1KYXjGcqmXkclI6ofQp0aqy6o3OUhrQNoPqqheOyY97pJZAI7ptpZqV2sy50f1UbrhgyFC+oCTwAT0UTnEmOVOXZqrH4S2IkyVXNR/nbg90ATwmuO1vU/Mo3u7qXKEnaZ1yD+iSon3LQB7ICheeSBHoq73ezMmey1jUsLeasKFNx8tsgECOZQsy/8AaY6ScoXsw1pxy3t0tMT146FT04VakQrLAJ54XlvtqJ2909oJdgSohnGVI1xb3Vofkcp7QIPoow0ASP6kp44iBlNJtKx7owIKXl26SSecpswMYUgIjoEpIeCIwI6H3pzSZnMlMAHontBPOJQLDTkDKUD6UAGO0oHEyZSkg7xkJI69EAQZT2AHnPqpFNj06Iz3SkkuIDHRxJwE9rA7gQnslhgAcfaAIGQCOqHNazryVKGBmXOAHvUFa+pU3eXTG97vkjqpvpd7P28R0SDqBlNDXnNQ/MEu6MDCfS6P3bTn+ih376mTIGU574jaJHHuULHf2jgegCbJE7tlRu1wkDqoXWwJkOifRST9CUH6Fd/pFU0iwnDXEeqbTBb7TzIg4jCndQE72ey4jp1UTquwRVbtHfos2KrNruL3b2ua3geziVIREdVK5jHNDm5UZEZU49KSDHEpCIzEH3JXmBh23+iYAG4kjMycqLNU57wGe24ATglNcHNMHMJrmh3IB7eiJMps0ScYJCQnOJSnccn+qR4LhtkiPVTQZlIU9+4gjMd1GSY9rlLAhEmAB9Ca5senzoJ9UB0Ax06qSKbMDI9ZKiLuuZ7hKG7avtVCYGR3RULCB5c/aiowdpLiJKHje1zgIIMjskc4pjnEiAUlRE8OMmCq9TGSFO85yeVXqEwt4lZ18Ya6ZQq2r1hStnukDB5KF7sMLpwtkrqqbsDKt0nQOh+dZ9Fw6kk/0Vum5eSquAx1hSNbgumfeVC2YkjClY4jATYkbxCkp5IBwmcNJaJJ6d0rS/aC4BpPQLWzSV7qbSQNznxwAlaZaDByMg9E0HsZUrZhQK1waVJVrVHDbT2gSOiaGnlPawnoITVNkAJyntE449UFrRkkNhQ1Ly3ozufn0U/6k2mbk4zmCn7cdlUoamy5JYxr24/3kSPnULqde4MOugWf8g5TK/cF2pc0aPynjd2GVE67r1MUKe0ftOwko29GjljSXEZLjJU0gniVnW/bSvTs3vO6tWLzzAwFMKNJpa4MYdvBCWTu6D3dEDAgRCupIezt0nKRu08jnPKQCZlKRHUfSm10RzTnCo2NcV7q8idlNzWCO8ZV6rUFKjUquiGNLv6Ln/CVU17G4ru/TuX/AEYU93Sz03T26JeBmFE4VHVg4OaKfaMkpxdmeisQ+czIzwmua14h0EHpCZuGcJd+VWp2rVrSpRO+1cY6sJ/0UTNQaHeXVbteOkK6XdJTK9pRu2FtRs4weo9yzZ+Lv9NBZWb7Lscwkc39oFZ9azu7Ql9Fxqs7fpBFDV2l22pyeh6Kc/8A9Lx/Fxw5z8yZxlSNrUq3DgD6lBpnomt9xP8AqIk7ueUOAAnoMkpajdjgDuOJkDCjcRtwU1r2pKjfNAIfgZ9k8hHyj7ZAgdU0QD9ibIysqR0DsQkaA/2RHpKHMOcKN3+igYHb5Bw4TKAQPazPSEuDyYUbyZ56ouzXHnKYfdxyldOcJhqOEwMdUibRv4M9FUrOAGVPUf3WZf3LaNNzy4QJ4Xbx47rFvTA8S3rSBbgnc4zjshZM1NX1QbMtmST0AQvrYYTGaeTK216TbvDmgz/VX6LiCDyVzmjXjbygyo3qAV0ds08/6L5ufjsrpMottO8tJHCsMBUdMMHysKYV6TBK5WfrW0rWezhpJHRSUqTnAEiI6SqtTU2MByB1VSprQYCAfepzkNWtksDTlwAHCDcUKcy+VzFTWalZ22lueeoblPp22oXIBqTRaerzn6AnO31GuLer6xRZ8mMHKpu157/ZotLnHgNEqpbeH7Zr99xVrXDv+Z5DR8wWtRpsoM20mNaP+UQmsr9k1FQUtRu3S93kN67jmPcrFDTqDXN3HzXnEv4U273fanDnGEmMXaYDymgAAAdhCYA0uLgMlJU3PLNpA2nLT1TgTtBI9r0W92s6OLs9vcnNB7qNuXS4KVvPOFFITk/1RwmuDdxhxmErTHoosOPphDWgkkAApI4ypGe7CQtZPiq8/A9FqwYdU9gR6/8AsKl4SpGlodLHynPd9JVDxxeivd0rNpkMyQtbQWxpFuAOGn58lJPsaBMJN84TXQf9UxxyrPxZDyZQSfo6opOguGJIgSlZu8r25D9xx0hVokwla4zExCDERKGskjc4NaTmSpYlSD2gPXoql7plC6ne3a8cPbgj1VptzbFzgyo1xGCQeqe4doPfCnWR25q5tbzTvajzKU4c3p8yW31g9ScLoC0jp86zrzRra6Bc1vl1P2qcD6QufCz01Mp9lp39OsIIgqXy21G7muB9Fg17G9sTujfTH6TPsSW+qOaY3HHKc9dZRbjv02nscyIb9KYTBxj3KGlqQqABxJCtDyajS4O44ELXV9J69q9NuxznF7yXCDJTHnPKseXvDoGW8hQPbmIhSwlREgTgJjnCPVSPAbM89woXR1OFnQjc+M5lQ1HwDz9CWo/mCqlxXgc/QumOKWm3FbYCSYXF+ItW853ks+SMlwPJVrX9d8oGjReC84J7LH0WwOo3ZqP/AN2wy6epX0fB4eP+VefyZ/UbfhyxdRt/MqN9urnIyB0Qt6yti97REfMhej/rk5bwhdVbWtWoPBG3qcgFdzR1B0CFmP8ADdGleOuRLXOxCfSv7WlePs3f7xkc9V5PPhllenSTTZF88jqnA3FX5LHQepwoaFeliAPRW23PYmPQrx3CfbpEZ064qfKqspe4SVYoaPZsM1g+u4H9M4+hDa89SpX3Hl09zW7zPAU6nemu04/snbaNOnTpjgNEKQOJIHKrsq7gDBBI4KmpwTkqztdJm4MTMJxeQQFBVuQyrtY0kDr3UgcYk+9NwqyXtpsBa3e7r0CQEuEloB7BRB8jn6VI2dvJU+0SN/on7wR6zCjDoPdPEEEwAhUjRPWEheA4NkzzwkbJ96c+KcB2XHpKbSgnEAk+5Pa4Bm3r6qMmM5HzpQCU+10kyU4vFKm55iGiUjGngmCs3xPfCy017WmHvwE/2OHu6xvdQr3Djy4x7l2WmN26bbN4/swuJot9kk8ldxaiLOgO1Nv+i6Waie6lnKDx2TCeYSgiMlY326FaTPvTyVEHAd496VpLo3IaOz80pxf0ImUxzm/JyknP9ENGPs6dSr5k7Z5AwrbGinRcxhIcRAcTMKvuwpGGRlTUhUNNtyxwFWqHNb17qaQZMIeQcqOcpJo9nkzjos+90e3ugSG+XU6OaFdJhJPdS9+zTl7qxu7AzBewcOaJ+lMo37jEmO66qZWdeaPa3cuDfKqHMtwudw/G5l+q9vqjm9Qr7LqhcR5ns45CwbnS7yzJLW+awdW5Kgp3rhgk+oSZ5Y9UuMv/AMuhqWpLZY4bTxlULiWSCYVejqLqZkGE6rf03tJeQ3HK7YTHJzu4rXFwymHFzoxMrkNd8RbXOoUCQ/q7oFV8S686rc1Lem+aAMbmnlc/RZUu6zaNMeYXH6F9Hw+CTuvNn5N3UTUKFfUroUgCXOOX9PnXdabp7LaiyjTEgdYyT3VTRNGZZUw1sue75RK7LRNGfXqD2Z9/dd73WJFnQNINZ7TtQu/0bSGWdIVHtEQhamFrFzkeZ0rmnfW4qMcCYXmfiqu+jr9VzJEQAZhdLp1+/T6gkzTOCFV8XaAdXaL+xbvqR7TW8kLOU7268lfQ/EYc1tKvUBfIHvXWWt2HtEZXkIL7ao4eW5rmdz8lbml+J6ltDa0uHvXDyfHl7xXHP6r1Gk/q7jurDXAgwfeuU03XaV2yWvI9CVtUbyRzgrxZ+PTrMmq1+eVM14MGVmtrAjcCpmVo6mCuetN+2iKghPD59FSbVGCpRV6TlZtVcBmFMxzWtkgk8AKm2p71MH5kkxCbTSwHT2Cc0yM5UAPEKVuOqJek7HBuQm7T5nmOJJjqkDuiUuzxhQh2S7ceqlYSMjHSQoS+SMYClY7PomxOyeS4nqfVcP4wvjdXotwZazouxvbhttaVKpMQF5tXqG6u6lV2dzlvGbukiSm2ABx2XaUWxb0wYEMGfmXH0KfmVabJ+U4Bdg4Q0NjAgLp5NaTH2CfoCRrgDnsiZTesLk66Lv3OPsgAevKewhvIlMEExkpsyYBBjlVfor31NxAa0D9pSSBjqVH0StMGZys7IePpTw0wZgBRF2OUysXVgBuIHoE2XtO444hRF4CDU2sDZmAoXuz3S1EpqAJrqxH/AHVd9SEx9ZTaxaNQHrykNYeioOutvVQvuwOoSRK1RcNGCcFVbvT7S9ZkCnU6OasyrqDWcuA+dZN/4wtrEH+0DnDo0rph4sr9MZXXcqxeafcWRP6bP2mrLvK5FF0zwsu88eXtx/Z27WtBxLl0lHT6d1aUn1h7bmAuXonxuNlZ/pvp5nRtql9cOp0CSSTyF2Gh+HmWADtodVdy6Fs2Ph63tDtoUokzMZXWaN4adWLSWGDwvdvrTz6Z+i6E+5c32J9YXpegeHadvT82pDGNB9o9fRO0zRadjQFQtbtHMqh4h8Tl7PwS1MNAgxwF2w8f3XLPL6iPxFru1ptLV0AcuBQuaEukyJOcoW7l+Oenm1VhHrhS2N/VsKmCSw8hSPZu5VerSHRc5p3P1rw7a6/SNzalrK0SQ3quFv8ATbnS65pVqbmuB5PBXa29xWsqm5hPqFp1Bp/iCiKV00B8c9QprXcWd+3mtC/qW7w6SByQCuh03xeA8U6w2jvKNf8AAlxpwNe0P4TR5Ecj0XLmhUpmHM2kdHBYuOOXVa1li9Qstct7gDZVaZ9Vq0rppyCCvH7e6qUHiHkGcQVtWniq6tnNFQ7mcLy+T4v46Y+SPUadeRyFPSqwVxdh4sta5a1ztpPcrctdZoPgCo0/OvNl4Lj9Oky26FlWc8KdrwcclZFK8DuCrNO49VxuNi721PNbIAyVI0icZWcy4EjKnZWnMlZrX/V4HsU8GVUZVO3b1UzHTEqWpInaJMgqxTbMZKgowTEwrLSACc4TGJawfF995FoaDTlxhcdQB7LS8TXZudQLAZDT9Kz6QgL0+PH7Zvpe09u+9otEfKldS8h3J49VzWjU9980xhoJMroiR1WfLfpcATnCQkprndU3zBxHPK5Tp00eXnvHuTRhxPU8oc8OPuHRM8wRHdS2qm3AdUg2ioak5iFAaqb50A5U2t6WHVJ6hNNQBVjVGZUT7gd1Ei6+sO6rvrqs+5E8x86q1r1jZlwEdJW5ham9LtSuIyVWqXQAdnKw77xFa27TNQE9guc1HxZUrS2hIHdd8Pj3L2zl5JHXXer0bcS+o0fOuc1HxafkWzS7/mXL17qtcnc95PzqD2iYk/YvZ4/jYz24ZeS/S/c6zeXLzvrO9zSqVRxe4uJJPVLRoVKzop0y4nELo9J8E3V8WurSxvJaOV6OsY5932w9OtX3l1SZTpuPtCY969h0/Tn1WMaxsiAOE/w54CZQDdtLaO8ZXoOnaDRsmAuaJ9QpxudS5yMTSPDIJDntk+q6enRoWFGTtbHUqG91a206mRIBiAAuU1HWK+oPO4ltPo2V2xwmLjcrWhrXiJ9yTQtiWs6u7rCLiRzkpOe8+9G0xyrskK3of9EJQ0doQo1pwYAOUx9IqSmQVMWyOFj02zX0o9/uUJYWmW+ye4Wm6lPRV30eyu0WLHWqlH+zry5qZqmgWGuUzUptayocyBCpvpEHKKdWpbGabi33KWStTKua1Pwnf2MubS3s6ELEqsq03bahLSOJC9Tt9YbUG24YI4lFzomm6m3dsbPphLLF6ryprnNONxPdWaOpV6D9wqFseq6rU/Aj2kvtnkjPsrm7vQ7y2MPtnR3Wdz7NWNKz8aXdIt3EuAMFdFY+Obaq4CqSwleePovpfKGye4SBneT6rGXhxvazKx7Fb69bVGhwqtjvK0aOpU6mWPBHovFqN5VoU9m8hvvVvT/EF/bOf5Ti5nqvNl8X8dP6Pa6N2JmVcp192ZC8dsvHl1Q9msyfVb+m/CJRNRrKgc0d1wz+LlGpnHp1Kpu4U1xXNG2e70XKWHi2wrRFdq2bq7bcWzSx0h3C5/ysS1ytxp9xWrvqnadxlAs7ingtC3DSgRiVXqYMQvRh4+k5bN0Km+nWqPe2IELUqVAJmFnW9wyi0lzw0uPBTKuoUw72qjY9SuXkwtrpj0veaSeEOqlpE4WbU122aP8AeNBCo3Hie0Mg1Rjsuc8Na5N41Wn9L0TatZjWiHLk63iu3pyGu3H0WfW8ZgYazPRdJ4cl5R2j7mFC6+YOXD6V5/deJrytMHYFnP1K8rEjz3CeYK3j8b9Zub0Svrtqw+1Wbj1WXc+L7VhIaS4jC4ap5r5lx2xJJPKSnSJZjgrtj8fGd1i536b174vuKpLaDS0d1k1NTvbiQ+s6D1UbW7Wx3V2206q8S1jnE8ABdJMZ6S7rLc2o8+0SfUpfLkzC6jT/AAZqF68OdTLG+q6zSfgyBI85hcfVdOX5HO6jzS1064ujDKT5mJA4XSaX4Du7st8xpa3tC9b0vwNbWsHy2j5l0ltpFpatBhsjorMbWLnJ6efaF8HlOhB8oNjuF3Wm+F6FpSD3NAhWa+pWtm0guaIWLe+J3vlluMcSuuPj17c8s7fTpfw2z0ymSQyeBK53U/Ez625lt7M8uKw61xVuXk1nlx9U3bJ6LpP9MaLUqvqv31CXHqSmlpiMJSD8yc4HnIys7ak0QY5ASiCeyI9ZSxBnH0rNahNuZKE52OiFV08+ouwrdMggQvc2fFl0pggeItS/k0vsUrPi26W3+8Gon/CppwrPOPCi0Hso308L3wfFy0wfr/Uf5VP7Ev5uWl/v7UP5VNOFXni+fH0PRRPtwf8AsvoY/Fw0s/r/AFH+VTTT8W3Sj+vtR/lU/sV41OcfOj6J6AIpmrSdLHke5fRJ+LTpR/vBqI/wqf2Jp+LNpR/vDqQ/waf2Jxqc48It9WqMxVbuCu07i1uhB2yehC9pPxZdIOf9oNS/k0vsQPiy6UOPEOpfyaX2JcN+2v6x4fd+GtPvxmmwH0WPefB/SqA+RU2nsvo6l8XGwoxt8San/KpfYrbPgAsW86/fn30qaxfEv9Y+SrnwPf0AdlPf8yzauh6jbNcHUXNHWAvswfANpw/XN9/KppHfAFpTxDtVvHe+lTUviyP64vig29VuDRdPdwRtLflOj3L7Oq/Fy0GsCHajd57Uqf2LMufiq+Gbh278aX7D/wAtOn9in882p5cXyZamqKjBTkAkZXtGksnTrcRMMGV6G34pfh9rw4eINVEGY8un9i6u1+A7TLWgyi3VbwhggE02fYsZeDLK9rfNi8aew9lTrtcBwvdj8Cmmn9aXn8tn2KGp8BmmVAf/AKreA/8ATYrfBl9MTyx8t+MLypa1KXlvLSegK5mrqNxVkPqvPpK+qtb+K7o+tOa5/iLVKO39ilTP+qyR8T3Ref8AavV5/wChR+xJ4L9uk8+L5fqXVf8ASc7nupKDatR0d+q+n2/FD0UET4o1Yx3oUfsUg+KPoodJ8UauR28ml9ifyy/CefF8w1GupO2NdJHZMp0C98kkuX1JR+KR4dpGTr+rPPqyn9iu0fiseGqJn8a6g73sp/Yn8sz++O3ys22fI2tLlYoaVdPd7NBzj7l9a2vxdvDtqBtvLox3ps+xaNH4EdGofIu64/w2Kfxz+z/0R8m0PB2pXv8A+O4AjqF0Gn/BncuANXHpC+oKHwUabQM/hdZ3vY1Wqvwb2LwNt1Vpx+zTatT49YvnfO1h8F9rTg1G7veulsfBtjagEU2yF7B+TS26ajcj/wDhiY/4Mrd360ugf+mxbnh0xfLXnltpdpbx7LYjspX3FrbTlrYXaVvglpVgR+PL1vupU/sVJ/wIWdQy7XdQP+HT+xdJhpi5bcNdeJreiYpS93osm6125uJDXbW9l6b+QrT/AN8338un9icPgN08frm+P+GxXim48gc59Rxc4kk9yl2yF6+PgOsB+uL3+WxL+RCw/fF7/LYmqvKPIYkQnACV66PgRsAZ/HF7/LYj8iVhM/ji9/lsU41eUeSRI5QYjC9b/IlY/vi9/lsQPgSsR+uL3+WxONXlHkY5xkpIBOYC9d/IjYfvi9/lsSH4EbD98Xv8tinGrM48ie4wO6F6474D7B365vR/hsQnGnOPTEIQuriEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQg//9k=" alt="Queso"></span>
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Queso</span>
+              <span class="dish-name" data-ca="Formatge" data-en="Cheese" data-fr="Fromage" data-zh="奶酪">Queso</span>
               <span class="dish-units">8 ud.</span>
             </span>
-            <span class="dish-cat">Formatge</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,50&nbsp;€</span>
@@ -641,9 +664,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Olivas rellenas</span>
+              <span class="dish-name" data-ca="Olives farcides" data-en="Stuffed olives" data-fr="Olives farcies" data-zh="酿橄榄">Olivas rellenas</span>
             </span>
-            <span class="dish-cat">Olives farcides</span>
           </span>
           <span class="leader"></span>
           <span class="price">2,40&nbsp;€</span>
@@ -654,10 +676,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Boquerones en vinagre</span>
+              <span class="dish-name" data-ca="Seitons en vinagre" data-en="Anchovies in vinegar" data-fr="Anchois au vinaigre" data-zh="醋渍鳀鱼">Boquerones en vinagre</span>
               <span class="dish-units">10 ud.</span>
             </span>
-            <span class="dish-cat">Seitons en vinagre</span>
           </span>
           <span class="leader"></span>
           <span class="price">4,80&nbsp;€</span>
@@ -668,9 +689,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Berberechos</span>
+              <span class="dish-name" data-ca="Escopinyes" data-en="Cockles" data-fr="Coques" data-zh="鸟蛤">Berberechos</span>
             </span>
-            <span class="dish-cat">Escopinyes</span>
           </span>
           <span class="leader"></span>
           <span class="price">7,90&nbsp;€</span>
@@ -681,9 +701,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Patatas fritas</span>
+              <span class="dish-name" data-ca="Patates fregides" data-en="French fries" data-fr="Frites" data-zh="炸薯条">Patatas fritas</span>
             </span>
-            <span class="dish-cat">Patates fregides</span>
           </span>
           <span class="leader"></span>
           <span class="price">4,40&nbsp;€</span>
@@ -694,9 +713,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Patatas bravas</span>
+              <span class="dish-name" data-ca="Patates braves" data-en="Patatas bravas (potatoes, spicy sauce)" data-fr="Patatas bravas (pommes de terre, sauce piquante)" data-zh="辣酱土豆块">Patatas bravas</span>
             </span>
-            <span class="dish-cat">Patates braves</span>
           </span>
           <span class="leader"></span>
           <span class="price">5,50&nbsp;€</span>
@@ -707,9 +725,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Pinchos morunos</span>
+              <span class="dish-name" data-ca="Pinxos moruns" data-en="Moorish-style skewers" data-fr="Brochettes épicées (pinchos morunos)" data-zh="摩尔风味烤肉串">Pinchos morunos</span>
             </span>
-            <span class="dish-cat">Pinxos moruns</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,20&nbsp;€</span>
@@ -720,9 +737,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Rejos</span>
+              <span class="dish-name" data-ca="Potes de calamar" data-en="Fried squid tentacles" data-fr="Tentacules de calmar frits" data-zh="炸鱿鱼须">Rejos</span>
             </span>
-            <span class="dish-cat">Potes de calamar</span>
           </span>
           <span class="leader"></span>
           <span class="price">7,30&nbsp;€</span>
@@ -733,9 +749,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Callos</span>
+              <span class="dish-name" data-ca="Tripa" data-en="Tripe stew (callos)" data-fr="Tripes en sauce (callos)" data-zh="西班牙炖牛肚">Callos</span>
             </span>
-            <span class="dish-cat">Tripa</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,50&nbsp;€</span>
@@ -746,9 +761,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Carne en salsa</span>
+              <span class="dish-name" data-ca="Carn amb salsa" data-en="Braised meat in sauce" data-fr="Viande mijotée en sauce" data-zh="酱汁炖肉">Carne en salsa</span>
             </span>
-            <span class="dish-cat">Carn amb salsa</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,50&nbsp;€</span>
@@ -759,10 +773,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Croquetas</span>
+              <span class="dish-name" data-ca="Croquetes" data-en="Croquettes" data-fr="Croquettes" data-zh="西班牙炸丸子">Croquetas</span>
               <span class="dish-units">8 ud.</span>
             </span>
-            <span class="dish-cat">Croquetes</span>
           </span>
           <span class="leader"></span>
           <span class="price">5,80&nbsp;€</span>
@@ -773,9 +786,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Morros</span>
+              <span class="dish-name" data-ca="Morro de porc" data-en="Pork snout" data-fr="Museau de porc" data-zh="猪拱嘴">Morros</span>
             </span>
-            <span class="dish-cat">Morro de porc</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,20&nbsp;€</span>
@@ -786,10 +798,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Nuggets</span>
+              <span class="dish-name" data-ca="Nuggets de pollastre" data-en="Chicken nuggets" data-fr="Nuggets de poulet" data-zh="鸡块">Nuggets</span>
               <span class="dish-units">8 ud.</span>
             </span>
-            <span class="dish-cat">Nuggets de pollastre</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,20&nbsp;€</span>
@@ -800,10 +811,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Alitas</span>
+              <span class="dish-name" data-ca="Ales de pollastre" data-en="Chicken wings" data-fr="Ailes de poulet" data-zh="鸡翅">Alitas</span>
               <span class="dish-units">8 ud.</span>
             </span>
-            <span class="dish-cat">Ales de pollastre</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,30&nbsp;€</span>
@@ -814,10 +824,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Calamares a la romana</span>
+              <span class="dish-name" data-ca="Calamars a la romana" data-en="Battered squid rings" data-fr="Calamars à la romaine" data-zh="炸鱿鱼圈">Calamares a la romana</span>
               <span class="dish-units">8 ud.</span>
             </span>
-            <span class="dish-cat">Calamars a la romana</span>
           </span>
           <span class="leader"></span>
           <span class="price">7,30&nbsp;€</span>
@@ -828,10 +837,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Gambon a la plancha</span>
+              <span class="dish-name" data-ca="Gambó a la planxa" data-en="Grilled king prawns" data-fr="Gambas à la plancha" data-zh="铁板烤大虾">Gambon a la plancha</span>
               <span class="dish-units">6 ud.</span>
             </span>
-            <span class="dish-cat">Gambó a la planxa</span>
           </span>
           <span class="leader"></span>
           <span class="price">7,90&nbsp;€</span>
@@ -842,9 +850,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Chocos</span>
+              <span class="dish-name" data-ca="Sípia" data-en="Fried cuttlefish" data-fr="Seiche frite" data-zh="炸墨鱼">Chocos</span>
             </span>
-            <span class="dish-cat">Sípia</span>
           </span>
           <span class="leader"></span>
           <span class="price">7,10&nbsp;€</span>
@@ -855,10 +862,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Rollo primavera</span>
+              <span class="dish-name" data-ca="Rotlle de primavera" data-en="Spring rolls" data-fr="Nems (rouleaux impériaux)" data-zh="春卷">Rollo primavera</span>
               <span class="dish-units">10 ud.</span>
             </span>
-            <span class="dish-cat">Rotlle de primavera</span>
           </span>
           <span class="leader"></span>
           <span class="price">4,40&nbsp;€</span>
@@ -869,9 +875,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Torrezno de Soria</span>
+              <span class="dish-name" data-ca="Cotna de porc fregida" data-en="Crispy pork belly (Soria)" data-fr="Poitrine de porc croustillante (Soria)" data-zh="索里亚脆炸五花肉">Torrezno de Soria</span>
             </span>
-            <span class="dish-cat">Cotna de porc fregida</span>
           </span>
           <span class="leader"></span>
           <span class="price">7,90&nbsp;€</span>
@@ -882,10 +887,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Tiras de pollo</span>
+              <span class="dish-name" data-ca="Tires de pollastre" data-en="Chicken strips" data-fr="Aiguillettes de poulet" data-zh="鸡柳">Tiras de pollo</span>
               <span class="dish-units">10 ud.</span>
             </span>
-            <span class="dish-cat">Tires de pollastre</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,90&nbsp;€</span>
@@ -896,9 +900,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Orejas (gallegas)</span>
+              <span class="dish-name" data-ca="Orelles gallegues" data-en="Pig’s ear, Galician style" data-fr="Oreille de porc à la galicienne" data-zh="加利西亚风味猪耳">Orejas (gallegas)</span>
             </span>
-            <span class="dish-cat">Orelles gallegues</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,00&nbsp;€</span>
@@ -909,10 +912,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Tempura de langostino</span>
+              <span class="dish-name" data-ca="Tempura de llagostí" data-en="Prawn tempura" data-fr="Tempura de crevettes" data-zh="天妇罗虾">Tempura de langostino</span>
               <span class="dish-units">5 ud.</span>
             </span>
-            <span class="dish-cat">Tempura de llagostí</span>
           </span>
           <span class="leader"></span>
           <span class="price">7,50&nbsp;€</span>
@@ -923,9 +925,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Cazón en adobo</span>
+              <span class="dish-name" data-ca="Caçó en adob" data-en="Marinated fried dogfish" data-fr="Chien de mer mariné et frit" data-zh="腌炸鲨鱼块">Cazón en adobo</span>
             </span>
-            <span class="dish-cat">Caçó en adob</span>
           </span>
           <span class="leader"></span>
           <span class="price">8,50&nbsp;€</span>
@@ -936,10 +937,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Boquerón frito</span>
+              <span class="dish-name" data-ca="Seitó fregit" data-en="Fried anchovies" data-fr="Anchois frits" data-zh="炸鳀鱼">Boquerón frito</span>
               <span class="dish-units">12 ud.</span>
             </span>
-            <span class="dish-cat">Seitó fregit</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,80&nbsp;€</span>
@@ -949,85 +949,85 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     </section>
 
     <section id="combinados">
-      <div class="sec-head"><div class="num">II</div><h2>Platos combinados</h2><div class="sec-cat">Plats combinats</div><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">II</div><h2 data-ca="Plats combinats" data-en="Combo plates" data-fr="Assiettes composées" data-zh="套餐">Platos combinados</h2><div class="rule"></div></div>
       <ul class="list">
       <li class="row reveal">
-        <span class="name">Salchichas + patatas o ensalada<small class="cat">Salsitxes amb patates o amanida</small></span>
+        <span class="name" data-ca="Salsitxes amb patates o amanida" data-en="Sausages + fries or salad" data-fr="Saucisses + frites ou salade" data-zh="香肠 + 薯条或沙拉">Salchichas + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">6,80&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Frankfurt (2) + patatas o ensalada<small class="cat">Frankfurt (2) amb patates o amanida</small></span>
+        <span class="name" data-ca="Frankfurt (2) amb patates o amanida" data-en="Frankfurters (2) + fries or salad" data-fr="Saucisses de Francfort (2) + frites ou salade" data-zh="法兰克福香肠（2根）+ 薯条或沙拉">Frankfurt (2) + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">7,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Hamburguesa + huevo + patatas o ensalada<small class="cat">Hamburguesa amb ou i patates o amanida</small></span>
+        <span class="name" data-ca="Hamburguesa amb ou i patates o amanida" data-en="Burger patty + egg + fries or salad" data-fr="Steak haché + œuf + frites ou salade" data-zh="汉堡肉饼 + 鸡蛋 + 薯条或沙拉">Hamburguesa + huevo + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">7,80&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Lomo + patatas + huevo o ensalada<small class="cat">Llom amb patates i ou o amanida</small></span>
+        <span class="name" data-ca="Llom amb patates i ou o amanida" data-en="Pork loin + fries + egg or salad" data-fr="Longe de porc + frites + œuf ou salade" data-zh="猪里脊 + 薯条 + 鸡蛋或沙拉">Lomo + patatas + huevo o ensalada</span>
         <span class="leader"></span>
         <span class="price">6,90&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Pollo + patatas o ensalada<small class="cat">Pollastre amb patates o amanida</small></span>
+        <span class="name" data-ca="Pollastre amb patates o amanida" data-en="Chicken + fries or salad" data-fr="Poulet + frites ou salade" data-zh="鸡肉 + 薯条或沙拉">Pollo + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">7,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Bacon + frankfurt + huevo + patatas o ensalada<small class="cat">Bacó, frankfurt i ou amb patates o amanida</small></span>
+        <span class="name" data-ca="Bacó, frankfurt i ou amb patates o amanida" data-en="Bacon + frankfurter + egg + fries or salad" data-fr="Bacon + saucisse de Francfort + œuf + frites ou salade" data-zh="培根 + 法兰克福香肠 + 鸡蛋 + 薯条或沙拉">Bacon + frankfurt + huevo + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">8,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Pincho + patatas o ensalada<small class="cat">Pinxo amb patates o amanida</small></span>
+        <span class="name" data-ca="Pinxo amb patates o amanida" data-en="Skewer + fries or salad" data-fr="Brochette + frites ou salade" data-zh="肉串 + 薯条或沙拉">Pincho + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">8,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Rejos + patatas o ensalada<small class="cat">Potes de calamar amb patates o amanida</small></span>
+        <span class="name" data-ca="Potes de calamar amb patates o amanida" data-en="Squid tentacles + fries or salad" data-fr="Tentacules de calmar + frites ou salade" data-zh="炸鱿鱼须 + 薯条或沙拉">Rejos + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">9,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Calamares + patatas o ensalada<small class="cat">Calamars amb patates o amanida</small></span>
+        <span class="name" data-ca="Calamars amb patates o amanida" data-en="Squid rings + fries or salad" data-fr="Calamars + frites ou salade" data-zh="炸鱿鱼圈 + 薯条或沙拉">Calamares + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">9,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Nuggets + patatas o ensalada<small class="cat">Nuggets amb patates o amanida</small></span>
+        <span class="name" data-ca="Nuggets amb patates o amanida" data-en="Chicken nuggets + fries or salad" data-fr="Nuggets de poulet + frites ou salade" data-zh="鸡块 + 薯条或沙拉">Nuggets + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">8,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Alitas + patatas o ensalada<small class="cat">Ales de pollastre amb patates o amanida</small></span>
+        <span class="name" data-ca="Ales de pollastre amb patates o amanida" data-en="Chicken wings + fries or salad" data-fr="Ailes de poulet + frites ou salade" data-zh="鸡翅 + 薯条或沙拉">Alitas + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">8,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Chocos + patatas o ensalada<small class="cat">Sípia amb patates o amanida</small></span>
+        <span class="name" data-ca="Sípia amb patates o amanida" data-en="Fried cuttlefish + fries or salad" data-fr="Seiche frite + frites ou salade" data-zh="炸墨鱼 + 薯条或沙拉">Chocos + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">9,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Hamburguesa completa + patatas<small class="cat">Hamburguesa completa amb patates</small></span>
+        <span class="name" data-ca="Hamburguesa completa amb patates" data-en="Deluxe burger + fries" data-fr="Burger complet + frites" data-zh="豪华汉堡 + 薯条">Hamburguesa completa + patatas</span>
         <span class="leader"></span>
         <span class="price">8,80&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Tiras de pollo + patatas o ensalada<small class="cat">Tires de pollastre amb patates o amanida</small></span>
+        <span class="name" data-ca="Tires de pollastre amb patates o amanida" data-en="Chicken strips + fries or salad" data-fr="Aiguillettes de poulet + frites ou salade" data-zh="鸡柳 + 薯条或沙拉">Tiras de pollo + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">8,80&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Cazón en adobo + patatas o ensalada<small class="cat">Caçó en adob amb patates o amanida</small></span>
+        <span class="name" data-ca="Caçó en adob amb patates o amanida" data-en="Marinated fried dogfish + fries or salad" data-fr="Chien de mer mariné + frites ou salade" data-zh="腌炸鲨鱼块 + 薯条或沙拉">Cazón en adobo + patatas o ensalada</span>
         <span class="leader"></span>
         <span class="price">10,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">BCD: Frankfurt + patatas<small class="cat">Frankfurt amb patates</small></span>
+        <span class="name" data-ca="BCD: Frankfurt amb patates" data-en="BCD: Frankfurter + fries" data-fr="BCD : saucisse de Francfort + frites" data-zh="BCD：法兰克福香肠 + 薯条">BCD: Frankfurt + patatas</span>
         <span class="leader"></span>
         <span class="price">6,50&nbsp;€</span>
       </li>
@@ -1035,14 +1035,14 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     </section>
 
     <section id="china">
-      <div class="sec-head"><div class="num">III</div><h2>Comida china</h2><div class="sec-cat">Menjar xinès</div><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">III</div><h2 data-ca="Menjar xinès" data-en="Chinese food" data-fr="Cuisine chinoise" data-zh="中餐">Comida china</h2><div class="rule"></div></div>
       <ul class="list">
       <li class="dish reveal">
         <span class="thumb"><img loading="lazy" src="data:image/jpeg;base64,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" alt="Tallarines"></span>
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Tallarines</span>
+              <span class="dish-name" data-ca="Tallarins" data-en="Stir-fried noodles" data-fr="Nouilles sautées" data-zh="炒面">Tallarines</span>
             </span>
           </span>
           <span class="leader"></span>
@@ -1054,9 +1054,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Arroz</span>
+              <span class="dish-name" data-ca="Arròs" data-en="Fried rice" data-fr="Riz sauté" data-zh="炒饭">Arroz</span>
             </span>
-            <span class="dish-cat">Arròs</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,20&nbsp;€</span>
@@ -1067,9 +1066,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Fideos</span>
+              <span class="dish-name" data-ca="Fideus" data-en="Stir-fried rice noodles" data-fr="Vermicelles de riz sautés" data-zh="炒米粉">Fideos</span>
             </span>
-            <span class="dish-cat">Fideus</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,20&nbsp;€</span>
@@ -1080,10 +1078,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Empanadillas</span>
+              <span class="dish-name" data-ca="Empanadilles" data-en="Dumplings" data-fr="Raviolis chinois" data-zh="煎饺">Empanadillas</span>
               <span class="dish-units">10 ud.</span>
             </span>
-            <span class="dish-cat">Empanadilles</span>
           </span>
           <span class="leader"></span>
           <span class="price">6,50&nbsp;€</span>
@@ -1094,7 +1091,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="dish-body">
           <span class="dish-info">
             <span class="dish-titles">
-              <span class="dish-name">Sopa</span>
+              <span class="dish-name" data-ca="Sopa" data-en="Soup" data-fr="Soupe" data-zh="汤">Sopa</span>
             </span>
           </span>
           <span class="leader"></span>
@@ -1105,197 +1102,197 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     </section>
 
     <section id="bocadillos">
-      <div class="sec-head"><div class="num">IV</div><h2>Bocadillos</h2><div class="sec-cat">Entrepans</div><div class="rule"></div></div>
-      <p class="sec-note" data-ca="Entrepans petits · només freds o de truita">Bocadillos pequeños · solo fríos o de tortilla</p>
+      <div class="sec-head"><div class="num">IV</div><h2 data-ca="Entrepans" data-en="Sandwiches" data-fr="Sandwichs" data-zh="长棍三明治">Bocadillos</h2><div class="rule"></div></div>
+      <p class="sec-note" data-ca="Entrepans petits · només freds o de truita" data-en="Small sandwiches · cold fillings or omelette only" data-fr="Petits sandwichs · uniquement froids ou à l’omelette" data-zh="小份三明治 · 仅限冷食或煎蛋卷">Bocadillos pequeños · solo fríos o de tortilla</p>
       <ul class="list">
       <li class="row reveal">
-        <span class="name">Jamón<small class="cat">Pernil</small></span>
+        <span class="name" data-ca="Pernil" data-en="Cured ham (serrano)" data-fr="Jambon cru (serrano)" data-zh="西班牙火腿">Jamón</span>
         <span class="leader"></span>
         <span class="price">4,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Fuet</span>
+        <span class="name" data-ca="Fuet" data-en="Fuet (Catalan dry sausage)" data-fr="Fuet (saucisson catalan)" data-zh="Fuet 风干香肠">Fuet</span>
         <span class="leader"></span>
         <span class="price">4,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Queso<small class="cat">Formatge</small></span>
+        <span class="name" data-ca="Formatge" data-en="Cheese" data-fr="Fromage" data-zh="奶酪">Queso</span>
         <span class="leader"></span>
         <span class="price">4,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Jamón dulce<small class="cat">Pernil dolç</small></span>
+        <span class="name" data-ca="Pernil dolç" data-en="Cooked ham" data-fr="Jambon blanc" data-zh="熟火腿">Jamón dulce</span>
         <span class="leader"></span>
         <span class="price">3,80&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Chorizo<small class="cat">Xoriço</small></span>
+        <span class="name" data-ca="Xoriço" data-en="Chorizo" data-fr="Chorizo" data-zh="西班牙红椒香肠">Chorizo</span>
         <span class="leader"></span>
         <span class="price">4,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Atún<small class="cat">Tonyina</small></span>
+        <span class="name" data-ca="Tonyina" data-en="Tuna" data-fr="Thon" data-zh="金枪鱼">Atún</span>
         <span class="leader"></span>
         <span class="price">4,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Vegetal · atún<small class="cat">Vegetal · tonyina</small></span>
+        <span class="name" data-ca="Vegetal · tonyina" data-en="Salad sandwich · tuna" data-fr="Crudités · thon" data-zh="蔬菜 · 金枪鱼">Vegetal · atún</span>
         <span class="leader"></span>
         <span class="price">5,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Serranito</span>
+        <span class="name" data-ca="Serranito" data-en="Serranito (pork loin, ham &amp; green pepper)" data-fr="Serranito (longe de porc, jambon et poivron)" data-zh="Serranito（猪里脊、火腿、青椒）">Serranito</span>
         <span class="leader"></span>
         <span class="price">6,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Pollo<small class="cat">Pollastre</small></span>
+        <span class="name" data-ca="Pollastre" data-en="Chicken" data-fr="Poulet" data-zh="鸡肉">Pollo</span>
         <span class="leader"></span>
         <span class="price">4,90&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Bacon<small class="cat">Bacó</small></span>
+        <span class="name" data-ca="Bacó" data-en="Bacon" data-fr="Bacon" data-zh="培根">Bacon</span>
         <span class="leader"></span>
         <span class="price">4,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Salchichas<small class="cat">Salsitxes</small></span>
+        <span class="name" data-ca="Salsitxes" data-en="Sausages" data-fr="Saucisses" data-zh="香肠">Salchichas</span>
         <span class="leader"></span>
         <span class="price">4,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Lomo<small class="cat">Llom</small></span>
+        <span class="name" data-ca="Llom" data-en="Pork loin" data-fr="Longe de porc" data-zh="猪里脊">Lomo</span>
         <span class="leader"></span>
         <span class="price">4,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Tortilla francesa<small class="cat">Truita a la francesa</small></span>
+        <span class="name" data-ca="Truita a la francesa" data-en="Plain omelette" data-fr="Omelette nature" data-zh="原味煎蛋卷">Tortilla francesa</span>
         <span class="leader"></span>
         <span class="price">4,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Pinchos morunos<small class="cat">Pinxos moruns</small></span>
+        <span class="name" data-ca="Pinxos moruns" data-en="Moorish-style skewers" data-fr="Brochettes épicées (pinchos morunos)" data-zh="摩尔风味烤肉串">Pinchos morunos</span>
         <span class="leader"></span>
         <span class="price">5,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Bikini</span>
+        <span class="name" data-ca="Bikini" data-en="Bikini (toasted ham &amp; cheese)" data-fr="Bikini (croque-monsieur)" data-zh="Bikini（火腿奶酪热压三明治）">Bikini</span>
         <span class="leader"></span>
         <span class="price">2,90&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Vegetal · pollo<small class="cat">Vegetal · pollastre</small></span>
+        <span class="name" data-ca="Vegetal · pollastre" data-en="Salad sandwich · chicken" data-fr="Crudités · poulet" data-zh="蔬菜 · 鸡肉">Vegetal · pollo</span>
         <span class="leader"></span>
         <span class="price">6,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Hamburguesa</span>
+        <span class="name" data-ca="Hamburguesa" data-en="Burger" data-fr="Hamburger" data-zh="汉堡">Hamburguesa</span>
         <span class="leader"></span>
         <span class="price">4,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Frankfurt</span>
+        <span class="name" data-ca="Frankfurt" data-en="Frankfurter" data-fr="Saucisse de Francfort" data-zh="法兰克福香肠">Frankfurt</span>
         <span class="leader"></span>
         <span class="price">4,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Panceta<small class="cat">Cansalada</small></span>
+        <span class="name" data-ca="Cansalada" data-en="Pork belly" data-fr="Poitrine de porc" data-zh="五花肉">Panceta</span>
         <span class="leader"></span>
         <span class="price">4,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Butifarra</span>
+        <span class="name" data-ca="Botifarra" data-en="Butifarra (Catalan sausage)" data-fr="Botifarra (saucisse catalane)" data-zh="加泰罗尼亚香肠">Butifarra</span>
         <span class="leader"></span>
         <span class="price">5,80&nbsp;€</span>
       </li>
       </ul>
-      <p class="sec-note" style="margin-top:18px" data-ca="Suplements (preu addicional): enciam, formatge, ceba, pebrot, ou">Suplementos (precio adicional): lechuga, queso, cebolla, pimiento, huevo</p>
+      <p class="sec-note" style="margin-top:18px" data-ca="Suplements (preu addicional): enciam, formatge, ceba, pebrot, ou" data-en="Extras (additional charge): lettuce, cheese, onion, pepper, egg" data-fr="Suppléments (payants) : laitue, fromage, oignon, poivron, œuf" data-zh="加料（另收费）：生菜、奶酪、洋葱、青椒、鸡蛋">Suplementos (precio adicional): lechuga, queso, cebolla, pimiento, huevo</p>
     </section>
 
     <section id="vinos">
-      <div class="sec-head"><div class="num">V</div><h2>Vinos &amp; cavas</h2><div class="sec-cat">Vins i caves</div><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">V</div><h2 data-ca="Vins i caves" data-en="Wine &amp; cava" data-fr="Vins &amp; cava" data-zh="葡萄酒与卡瓦">Vinos &amp; cavas</h2><div class="rule"></div></div>
       <ul class="list">
-      <li class="subhead">Tinto<small class="cat">Negre</small></li>
+      <li class="subhead" data-ca="Negre" data-en="Red wine" data-fr="Vin rouge" data-zh="红葡萄酒">Tinto</li>
       <li class="row reveal">
-        <span class="name">Coto Rioja · botella</span>
+        <span class="name" data-ca="Coto Rioja · ampolla" data-en="Coto Rioja · bottle" data-fr="Coto Rioja · bouteille" data-zh="Coto Rioja · 整瓶">Coto Rioja · botella</span>
         <span class="leader"></span>
         <span class="price">13,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Coto Rioja · copa</span>
+        <span class="name" data-ca="Coto Rioja · copa" data-en="Coto Rioja · glass" data-fr="Coto Rioja · verre" data-zh="Coto Rioja · 单杯">Coto Rioja · copa</span>
         <span class="leader"></span>
         <span class="price">2,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Vino de la casa · copa<small class="cat">Vi de la casa · copa</small></span>
+        <span class="name" data-ca="Vi de la casa · copa" data-en="House wine · glass" data-fr="Vin de la maison · verre" data-zh="本店葡萄酒 · 单杯">Vino de la casa · copa</span>
         <span class="leader"></span>
         <span class="price">1,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Moscatel</span>
+        <span class="name" data-ca="Moscatell" data-en="Muscatel" data-fr="Muscat" data-zh="麝香葡萄酒">Moscatel</span>
         <span class="leader"></span>
         <span class="price">1,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Barreja</span>
+        <span class="name" data-ca="Barreja" data-en="Barreja (muscatel &amp; anise)" data-fr="Barreja (muscat et anis)" data-zh="Barreja（麝香葡萄酒兑茴香酒）">Barreja</span>
         <span class="leader"></span>
         <span class="price">1,20&nbsp;€</span>
       </li>
-      <li class="subhead">Blanco<small class="cat">Blanc</small></li>
+      <li class="subhead" data-ca="Blanc" data-en="White wine" data-fr="Vin blanc" data-zh="白葡萄酒">Blanco</li>
       <li class="row reveal">
-        <span class="name">Cune Verdejo · botella</span>
+        <span class="name" data-ca="Cune Verdejo · ampolla" data-en="Cune Verdejo · bottle" data-fr="Cune Verdejo · bouteille" data-zh="Cune Verdejo · 整瓶">Cune Verdejo · botella</span>
         <span class="leader"></span>
         <span class="price">13,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Cune Verdejo · copa</span>
+        <span class="name" data-ca="Cune Verdejo · copa" data-en="Cune Verdejo · glass" data-fr="Cune Verdejo · verre" data-zh="Cune Verdejo · 单杯">Cune Verdejo · copa</span>
         <span class="leader"></span>
         <span class="price">2,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Coto Rioja · botella</span>
+        <span class="name" data-ca="Coto Rioja · ampolla" data-en="Coto Rioja · bottle" data-fr="Coto Rioja · bouteille" data-zh="Coto Rioja · 整瓶">Coto Rioja · botella</span>
         <span class="leader"></span>
         <span class="price">12,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Coto Rioja · copa</span>
+        <span class="name" data-ca="Coto Rioja · copa" data-en="Coto Rioja · glass" data-fr="Coto Rioja · verre" data-zh="Coto Rioja · 单杯">Coto Rioja · copa</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
-      <li class="subhead">Sangría<small class="cat">Sangria</small></li>
+      <li class="subhead" data-ca="Sangria" data-en="Sangria" data-fr="Sangria" data-zh="桑格利亚">Sangría</li>
       <li class="row reveal">
-        <span class="name">Jarra de sangría · 1 L<small class="cat">Gerra de sangria · 1 L</small></span>
+        <span class="name" data-ca="Gerra de sangria · 1 L" data-en="Jug of sangria · 1 L" data-fr="Pichet de sangria · 1 L" data-zh="桑格利亚 · 1升壶">Jarra de sangría · 1 L</span>
         <span class="leader"></span>
         <span class="price">11,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Jarra de sangría con cava · 1 L<small class="cat">Gerra de sangria amb cava · 1 L</small></span>
+        <span class="name" data-ca="Gerra de sangria amb cava · 1 L" data-en="Jug of cava sangria · 1 L" data-fr="Pichet de sangria au cava · 1 L" data-zh="卡瓦桑格利亚 · 1升壶">Jarra de sangría con cava · 1 L</span>
         <span class="leader"></span>
         <span class="price">14,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Tinto de verano · jarra<small class="cat">Tinto d'estiu · gerra</small></span>
+        <span class="name" data-ca="Tinto d'estiu · gerra" data-en="Tinto de verano (red wine &amp; lemonade) · jug" data-fr="Tinto de verano (vin rouge et limonade) · pichet" data-zh="夏日红酒 · 壶">Tinto de verano · jarra</span>
         <span class="leader"></span>
         <span class="price">3,80&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Tinto de verano · botella<small class="cat">Tinto d'estiu · ampolla</small></span>
+        <span class="name" data-ca="Tinto d'estiu · ampolla" data-en="Tinto de verano (red wine &amp; lemonade) · bottle" data-fr="Tinto de verano (vin rouge et limonade) · bouteille" data-zh="夏日红酒 · 瓶装">Tinto de verano · botella</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Tinto de verano · tubo<small class="cat">Tinto d'estiu · tub</small></span>
+        <span class="name" data-ca="Tinto d'estiu · tub" data-en="Tinto de verano (red wine &amp; lemonade) · tall glass" data-fr="Tinto de verano (vin rouge et limonade) · verre long" data-zh="夏日红酒 · 高杯">Tinto de verano · tubo</span>
         <span class="leader"></span>
         <span class="price">2,30&nbsp;€</span>
       </li>
-      <li class="subhead">Vermut</li>
+      <li class="subhead" data-ca="Vermut" data-en="Vermouth" data-fr="Vermouth" data-zh="味美思">Vermut</li>
       <li class="row reveal">
-        <span class="name">Martini · negro, blanco y mixto<small class="cat">Martini · negre, blanc i mixt</small></span>
+        <span class="name" data-ca="Martini · negre, blanc i mixt" data-en="Martini · red, white or mixed" data-fr="Martini · rouge, blanc ou mixte" data-zh="马提尼 · 红、白或混合">Martini · negro, blanco y mixto</span>
         <span class="leader"></span>
         <span class="price">3,40&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">De la casa · negro, blanco y mixto<small class="cat">De la casa · negre, blanc i mixt</small></span>
+        <span class="name" data-ca="De la casa · negre, blanc i mixt" data-en="House vermouth · red, white or mixed" data-fr="Vermouth maison · rouge, blanc ou mixte" data-zh="本店味美思 · 红、白或混合">De la casa · negro, blanco y mixto</span>
         <span class="leader"></span>
         <span class="price">2,50&nbsp;€</span>
       </li>
@@ -1303,7 +1300,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     </section>
 
     <section id="cerveza">
-      <div class="sec-head"><div class="num">VI</div><h2>Cerveza</h2><div class="sec-cat">Cervesa</div><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">VI</div><h2 data-ca="Cervesa" data-en="Beer" data-fr="Bière" data-zh="啤酒">Cerveza</h2><div class="rule"></div></div>
       <ul class="list">
       <li class="row reveal">
         <span class="name">San Miguel</span>
@@ -1311,47 +1308,47 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="price">1,80&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Damm Tostada · sin alcohol</span>
+        <span class="name" data-ca="Damm Tostada · sense alcohol" data-en="Damm Tostada · alcohol-free" data-fr="Damm Tostada · sans alcool" data-zh="Damm Tostada · 无醇">Damm Tostada · sin alcohol</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Estrella · quinto</span>
+        <span class="name" data-ca="Estrella · quinto" data-en="Estrella · small bottle (20 cl)" data-fr="Estrella · petite bouteille (20 cl)" data-zh="Estrella · 小瓶（20cl）">Estrella · quinto</span>
         <span class="leader"></span>
         <span class="price">1,70&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Estrella · mediana</span>
+        <span class="name" data-ca="Estrella · mitjana" data-en="Estrella · bottle (33 cl)" data-fr="Estrella · bouteille (33 cl)" data-zh="Estrella · 中瓶（33cl）">Estrella · mediana</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Galicia · quinto</span>
+        <span class="name" data-ca="Galicia · quinto" data-en="Galicia · small bottle (20 cl)" data-fr="Galicia · petite bouteille (20 cl)" data-zh="Galicia · 小瓶（20cl）">Galicia · quinto</span>
         <span class="leader"></span>
         <span class="price">1,70&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Galicia · mediana</span>
+        <span class="name" data-ca="Galicia · mitjana" data-en="Galicia · bottle (33 cl)" data-fr="Galicia · bouteille (33 cl)" data-zh="Galicia · 中瓶（33cl）">Galicia · mediana</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Free Damm · mediana · sin alcohol</span>
+        <span class="name" data-ca="Free Damm · mitjana · sense alcohol" data-en="Free Damm · bottle (33 cl) · alcohol-free" data-fr="Free Damm · bouteille (33 cl) · sans alcool" data-zh="Free Damm · 中瓶（33cl）· 无醇">Free Damm · mediana · sin alcohol</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Free Damm · quinto · sin alcohol</span>
+        <span class="name" data-ca="Free Damm · quinto · sense alcohol" data-en="Free Damm · small bottle (20 cl) · alcohol-free" data-fr="Free Damm · petite bouteille (20 cl) · sans alcool" data-zh="Free Damm · 小瓶（20cl）· 无醇">Free Damm · quinto · sin alcohol</span>
         <span class="leader"></span>
         <span class="price">1,70&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Free Damm limón · sin alcohol</span>
+        <span class="name" data-ca="Free Damm llimona · sense alcohol" data-en="Free Damm lemon · alcohol-free" data-fr="Free Damm citron · sans alcool" data-zh="Free Damm 柠檬味 · 无醇">Free Damm limón · sin alcohol</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Shandy o Damm limón · quinto</span>
+        <span class="name" data-ca="Shandy o Damm llimona · quinto" data-en="Shandy or Damm Lemon · small bottle (20 cl)" data-fr="Panaché ou Damm citron · petite bouteille (20 cl)" data-zh="Shandy 或 Damm 柠檬味 · 小瓶（20cl）">Shandy o Damm limón · quinto</span>
         <span class="leader"></span>
         <span class="price">1,70&nbsp;€</span>
       </li>
@@ -1371,22 +1368,22 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="price">2,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Copa de cerveza<small class="cat">Copa de cervesa</small></span>
+        <span class="name" data-ca="Copa de cervesa" data-en="Glass of beer" data-fr="Verre de bière" data-zh="杯装啤酒">Copa de cerveza</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Copa de cerveza · limón<small class="cat">Copa de cervesa · llimona</small></span>
+        <span class="name" data-ca="Copa de cervesa · llimona" data-en="Glass of beer with lemon" data-fr="Verre de bière au citron" data-zh="杯装啤酒 · 柠檬">Copa de cerveza · limón</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Caña pequeña<small class="cat">Canya petita</small></span>
+        <span class="name" data-ca="Canya petita" data-en="Small draught beer" data-fr="Petite bière pression" data-zh="小杯生啤">Caña pequeña</span>
         <span class="leader"></span>
         <span class="price">1,90&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Jarra<small class="cat">Gerra</small></span>
+        <span class="name" data-ca="Gerra" data-en="Beer mug" data-fr="Chope de bière" data-zh="大杯扎啤">Jarra</span>
         <span class="leader"></span>
         <span class="price">4,20&nbsp;€</span>
       </li>
@@ -1414,135 +1411,135 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     </section>
 
     <section id="cafe">
-      <div class="sec-head"><div class="num">VII</div><h2>Café &amp; té</h2><div class="sec-cat">Cafè i te</div><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">VII</div><h2 data-ca="Cafè i te" data-en="Coffee &amp; tea" data-fr="Café &amp; thé" data-zh="咖啡与茶">Café &amp; té</h2><div class="rule"></div></div>
       <ul class="list">
       <li class="row reveal">
-        <span class="name">Café<small class="cat">Cafè</small></span>
+        <span class="name" data-ca="Cafè" data-en="Espresso" data-fr="Café expresso" data-zh="意式浓缩咖啡">Café</span>
         <span class="leader"></span>
         <span class="price">1,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Cortado<small class="cat">Tallat</small></span>
+        <span class="name" data-ca="Tallat" data-en="Cortado (espresso with a dash of milk)" data-fr="Noisette" data-zh="可塔朵（浓缩咖啡加少许牛奶）">Cortado</span>
         <span class="leader"></span>
         <span class="price">1,40&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Café con leche<small class="cat">Cafè amb llet</small></span>
+        <span class="name" data-ca="Cafè amb llet" data-en="Coffee with milk" data-fr="Café au lait" data-zh="牛奶咖啡">Café con leche</span>
         <span class="leader"></span>
         <span class="price">1,60&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Café americano<small class="cat">Cafè americà</small></span>
+        <span class="name" data-ca="Cafè americà" data-en="Americano" data-fr="Café allongé" data-zh="美式咖啡">Café americano</span>
         <span class="leader"></span>
         <span class="price">1,40&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Capuccino<small class="cat">Caputxino</small></span>
+        <span class="name" data-ca="Caputxino" data-en="Cappuccino" data-fr="Cappuccino" data-zh="卡布奇诺">Capuccino</span>
         <span class="leader"></span>
         <span class="price">1,80&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Vaso de leche<small class="cat">Got de llet</small></span>
+        <span class="name" data-ca="Got de llet" data-en="Glass of milk" data-fr="Verre de lait" data-zh="一杯牛奶">Vaso de leche</span>
         <span class="leader"></span>
         <span class="price">1,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Carajillo coñac<small class="cat">Cigaló de conyac</small></span>
+        <span class="name" data-ca="Cigaló de conyac" data-en="Carajillo (espresso with brandy)" data-fr="Carajillo (café et brandy)" data-zh="Carajillo（咖啡加白兰地）">Carajillo coñac</span>
         <span class="leader"></span>
         <span class="price">2,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Carajillo Magno<small class="cat">Cigaló de Magno</small></span>
+        <span class="name" data-ca="Cigaló de Magno" data-en="Carajillo with Magno brandy" data-fr="Carajillo au brandy Magno" data-zh="Carajillo（咖啡加 Magno 白兰地）">Carajillo Magno</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Carajillo whisky<small class="cat">Cigaló de whisky</small></span>
+        <span class="name" data-ca="Cigaló de whisky" data-en="Carajillo with whisky" data-fr="Carajillo au whisky" data-zh="Carajillo（咖啡加威士忌）">Carajillo whisky</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Carajillo Baileys<small class="cat">Cigaló de Baileys</small></span>
+        <span class="name" data-ca="Cigaló de Baileys" data-en="Carajillo with Baileys" data-fr="Carajillo au Baileys" data-zh="Carajillo（咖啡加百利甜酒）">Carajillo Baileys</span>
         <span class="leader"></span>
         <span class="price">2,40&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Carajillo ron (Pujol)<small class="cat">Cigaló de rom (Pujol)</small></span>
+        <span class="name" data-ca="Cigaló de rom (Pujol)" data-en="Carajillo with rum (Pujol)" data-fr="Carajillo au rhum (Pujol)" data-zh="Carajillo（咖啡加朗姆酒，Pujol）">Carajillo ron (Pujol)</span>
         <span class="leader"></span>
         <span class="price">2,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Carajillo María<small class="cat">Cigaló de María</small></span>
+        <span class="name" data-ca="Cigaló de María" data-en="Carajillo María (coffee with liqueur)" data-fr="Carajillo María (café et liqueur)" data-zh="Carajillo（咖啡加 María 利口酒）">Carajillo María</span>
         <span class="leader"></span>
         <span class="price">2,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Carajillo crema<small class="cat">Cigaló de crema</small></span>
+        <span class="name" data-ca="Cigaló de crema" data-en="Carajillo with cream liqueur" data-fr="Carajillo à la liqueur de crème" data-zh="Carajillo（咖啡加奶油利口酒）">Carajillo crema</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Trifásico Baileys<small class="cat">Trifàsic Baileys</small></span>
+        <span class="name" data-ca="Trifàsic Baileys" data-en="Trifásico (coffee, milk &amp; Baileys)" data-fr="Trifásico (café, lait et Baileys)" data-zh="三层咖啡（咖啡、牛奶、百利甜酒）">Trifásico Baileys</span>
         <span class="leader"></span>
         <span class="price">2,40&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Trifásico whisky<small class="cat">Trifàsic whisky</small></span>
+        <span class="name" data-ca="Trifàsic whisky" data-en="Trifásico (coffee, milk &amp; whisky)" data-fr="Trifásico (café, lait et whisky)" data-zh="三层咖啡（咖啡、牛奶、威士忌）">Trifásico whisky</span>
         <span class="leader"></span>
         <span class="price">2,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Trifásico María<small class="cat">Trifàsic María</small></span>
+        <span class="name" data-ca="Trifàsic María" data-en="Trifásico María (coffee, milk &amp; liqueur)" data-fr="Trifásico María (café, lait et liqueur)" data-zh="三层咖啡（咖啡、牛奶、María 利口酒）">Trifásico María</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Té rojo<small class="cat">Te roig</small></span>
+        <span class="name" data-ca="Te roig" data-en="Pu-erh tea (red tea)" data-fr="Thé rouge (pu-erh)" data-zh="普洱茶">Té rojo</span>
         <span class="leader"></span>
         <span class="price">1,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Té verde<small class="cat">Te verd</small></span>
+        <span class="name" data-ca="Te verd" data-en="Green tea" data-fr="Thé vert" data-zh="绿茶">Té verde</span>
         <span class="leader"></span>
         <span class="price">1,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Té negro<small class="cat">Te negre</small></span>
+        <span class="name" data-ca="Te negre" data-en="Black tea" data-fr="Thé noir" data-zh="红茶">Té negro</span>
         <span class="leader"></span>
         <span class="price">1,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Poleo menta<small class="cat">Poliol menta</small></span>
+        <span class="name" data-ca="Poliol menta" data-en="Pennyroyal mint tea" data-fr="Infusion menthe pouliot" data-zh="胡薄荷茶">Poleo menta</span>
         <span class="leader"></span>
         <span class="price">1,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Manzanilla<small class="cat">Camamilla</small></span>
+        <span class="name" data-ca="Camamilla" data-en="Chamomile tea" data-fr="Camomille" data-zh="洋甘菊茶">Manzanilla</span>
         <span class="leader"></span>
         <span class="price">1,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Frutos del bosque<small class="cat">Fruits del bosc</small></span>
+        <span class="name" data-ca="Fruits del bosc" data-en="Berry infusion" data-fr="Infusion fruits des bois" data-zh="森林莓果茶">Frutos del bosque</span>
         <span class="leader"></span>
         <span class="price">1,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Tila<small class="cat">Til·la</small></span>
+        <span class="name" data-ca="Til·la" data-en="Linden tea" data-fr="Tilleul" data-zh="椴花茶">Tila</span>
         <span class="leader"></span>
         <span class="price">1,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Rooibos</span>
+        <span class="name" data-ca="Rooibos" data-en="Rooibos" data-fr="Rooibos" data-zh="路易波士茶">Rooibos</span>
         <span class="leader"></span>
         <span class="price">1,50&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Infusión jengibre<small class="cat">Infusió de gingebre</small></span>
+        <span class="name" data-ca="Infusió de gingebre" data-en="Ginger tea" data-fr="Infusion au gingembre" data-zh="姜茶">Infusión jengibre</span>
         <span class="leader"></span>
         <span class="price">1,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Colacao (sobre)</span>
+        <span class="name" data-ca="Colacao (sobre)" data-en="Cola Cao (chocolate milk)" data-fr="Cola Cao (chocolat au lait)" data-zh="巧克力牛奶（Cola Cao）">Colacao (sobre)</span>
         <span class="leader"></span>
         <span class="price">2,30&nbsp;€</span>
       </li>
@@ -1550,20 +1547,20 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     </section>
 
     <section id="refrescos">
-      <div class="sec-head"><div class="num">VIII</div><h2>Refrescos</h2><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">VIII</div><h2 data-ca="Refrescos" data-en="Soft drinks" data-fr="Boissons sans alcool" data-zh="软饮">Refrescos</h2><div class="rule"></div></div>
       <ul class="list">
       <li class="row reveal">
-        <span class="name">Agua pequeña · 0,5 L<small class="cat">Aigua petita · 0,5 L</small></span>
+        <span class="name" data-ca="Aigua petita · 0,5 L" data-en="Water · small (0.5 L)" data-fr="Eau · petite (0,5 L)" data-zh="矿泉水 · 小瓶（0.5升）">Agua pequeña · 0,5 L</span>
         <span class="leader"></span>
         <span class="price">1,20&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Agua grande · 1 L<small class="cat">Aigua gran · 1 L</small></span>
+        <span class="name" data-ca="Aigua gran · 1 L" data-en="Water · large (1 L)" data-fr="Eau · grande (1 L)" data-zh="矿泉水 · 大瓶（1升）">Agua grande · 1 L</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Vichy Catalán</span>
+        <span class="name" data-ca="Vichy Catalan" data-en="Vichy Catalán (sparkling water)" data-fr="Vichy Catalán (eau gazeuse)" data-zh="Vichy Catalán（气泡矿泉水）">Vichy Catalán</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
@@ -1578,67 +1575,67 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Coca-Cola · normal y zero</span>
+        <span class="name" data-ca="Coca-Cola · normal i zero" data-en="Coca-Cola · regular &amp; Zero" data-fr="Coca-Cola · classique et zéro" data-zh="可口可乐 · 原味/零度">Coca-Cola · normal y zero</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Fanta · naranja y limón</span>
+        <span class="name" data-ca="Fanta · taronja i llimona" data-en="Fanta · orange &amp; lemon" data-fr="Fanta · orange et citron" data-zh="芬达 · 橙味/柠檬味">Fanta · naranja y limón</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Nestea · limón</span>
+        <span class="name" data-ca="Nestea · llimona" data-en="Nestea · lemon" data-fr="Nestea · citron" data-zh="雀巢冰茶 · 柠檬味">Nestea · limón</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Aquarius · naranja y limón</span>
+        <span class="name" data-ca="Aquarius · taronja i llimona" data-en="Aquarius · orange &amp; lemon" data-fr="Aquarius · orange et citron" data-zh="Aquarius · 橙味/柠檬味">Aquarius · naranja y limón</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">7up</span>
+        <span class="name" data-ca="7up" data-en="7up" data-fr="7up" data-zh="七喜">7up</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Zumo · melocotón, piña y naranja<small class="cat">Suc · préssec, pinya i taronja</small></span>
+        <span class="name" data-ca="Suc · préssec, pinya i taronja" data-en="Juice · peach, pineapple or orange" data-fr="Jus · pêche, ananas ou orange" data-zh="果汁 · 桃子、菠萝或橙子">Zumo · melocotón, piña y naranja</span>
         <span class="leader"></span>
         <span class="price">2,00&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Tónica<small class="cat">Tònica</small></span>
+        <span class="name" data-ca="Tònica" data-en="Tonic water" data-fr="Tonic" data-zh="汤力水">Tónica</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Schweppes limón</span>
+        <span class="name" data-ca="Schweppes llimona" data-en="Schweppes lemon" data-fr="Schweppes citron" data-zh="Schweppes 柠檬汽水">Schweppes limón</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Cacaolat</span>
+        <span class="name" data-ca="Cacaolat" data-en="Cacaolat (chocolate milk)" data-fr="Cacaolat (lait chocolaté)" data-zh="Cacaolat 巧克力奶">Cacaolat</span>
         <span class="leader"></span>
         <span class="price">2,40&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Red Bull</span>
+        <span class="name" data-ca="Red Bull" data-en="Red Bull" data-fr="Red Bull" data-zh="红牛">Red Bull</span>
         <span class="leader"></span>
         <span class="price">2,60&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Colacao (sobre)</span>
+        <span class="name" data-ca="Colacao (sobre)" data-en="Cola Cao (chocolate milk)" data-fr="Cola Cao (chocolat au lait)" data-zh="巧克力牛奶（Cola Cao）">Colacao (sobre)</span>
         <span class="leader"></span>
         <span class="price">2,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Coca-Cola, Fanta · botella</span>
+        <span class="name" data-ca="Coca-Cola, Fanta · ampolla" data-en="Coca-Cola, Fanta · bottle" data-fr="Coca-Cola, Fanta · bouteille" data-zh="可口可乐、芬达 · 瓶装">Coca-Cola, Fanta · botella</span>
         <span class="leader"></span>
         <span class="price">2,30&nbsp;€</span>
       </li>
       <li class="row reveal">
-        <span class="name">Horchata<small class="cat">Orxata</small></span>
+        <span class="name" data-ca="Orxata" data-en="Horchata (tiger nut drink)" data-fr="Horchata (boisson au souchet)" data-zh="油莎豆奶（Horchata）">Horchata</span>
         <span class="leader"></span>
         <span class="price">2,10&nbsp;€</span>
       </li>
@@ -1646,14 +1643,14 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     </section>
 
     <section id="copas">
-      <div class="sec-head"><div class="num">IX</div><h2>Copas</h2><div class="sec-cat">Copes</div><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">IX</div><h2 data-ca="Copes" data-en="Spirits" data-fr="Spiritueux" data-zh="烈酒">Copas</h2><div class="rule"></div></div>
       <ul class="list">
       <li class="t3 head">
         <span class="name"></span>
-        <span class="c" data-ca="Xupito">Chupito</span><span class="c" data-ca="Copa">Copa</span><span class="c" data-ca="Tub">Tubo</span>
+        <span class="c" data-ca="Xupito" data-en="Shot" data-fr="Shot" data-zh="小杯">Chupito</span><span class="c" data-ca="Copa" data-en="Glass" data-fr="Verre" data-zh="标准杯">Copa</span><span class="c" data-ca="Tub" data-en="Tall" data-fr="Long" data-zh="高杯">Tubo</span>
       </li>
       <li class="t3 reveal">
-        <span class="name">Whisky</span>
+        <span class="name" data-ca="Whisky" data-en="Whisky" data-fr="Whisky" data-zh="威士忌">Whisky</span>
         <span class="c">1,90</span><span class="c">2,40</span><span class="c">4,20</span>
       </li>
       <li class="t3 reveal">
@@ -1665,7 +1662,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="c">3,00</span><span class="c">4,90</span><span class="c">6,00</span>
       </li>
       <li class="t3 reveal">
-        <span class="name">Johnnie Walker negro</span>
+        <span class="name" data-ca="Johnnie Walker negre" data-en="Johnnie Walker Black Label" data-fr="Johnnie Walker Black Label" data-zh="尊尼获加黑牌">Johnnie Walker negro</span>
         <span class="c">3,00</span><span class="c">4,90</span><span class="c">6,00</span>
       </li>
       <li class="t3 reveal">
@@ -1693,7 +1690,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="c">3,00</span><span class="c">5,00</span><span class="c">6,00</span>
       </li>
       <li class="t3 reveal">
-        <span class="name">Coñac<small class="cat">Conyac</small></span>
+        <span class="name" data-ca="Conyac" data-en="Spanish brandy" data-fr="Brandy espagnol" data-zh="白兰地">Coñac</span>
         <span class="c">1,60</span><span class="c">2,00</span><span class="c">3,90</span>
       </li>
       <li class="t3 reveal">
@@ -1701,11 +1698,11 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="c">1,90</span><span class="c">2,60</span><span class="c">4,20</span>
       </li>
       <li class="t3 reveal">
-        <span class="name">Pacharán<small class="cat">Patxaran</small></span>
+        <span class="name" data-ca="Patxaran" data-en="Pacharán (sloe liqueur)" data-fr="Pacharán (liqueur de prunelle)" data-zh="黑刺李酒（Pacharán）">Pacharán</span>
         <span class="c">1,90</span><span class="c">2,50</span><span class="c">4,00</span>
       </li>
       <li class="t3 reveal">
-        <span class="name">Ponche</span>
+        <span class="name" data-ca="Ponche" data-en="Ponche (brandy liqueur)" data-fr="Ponche (liqueur au brandy)" data-zh="Ponche 白兰地利口酒">Ponche</span>
         <span class="c">1,90</span><span class="c">2,50</span><span class="c">4,00</span>
       </li>
       <li class="t3 reveal">
@@ -1717,7 +1714,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="c">2,10</span><span class="c">2,80</span><span class="c">4,30</span>
       </li>
       <li class="t3 reveal">
-        <span class="name">Anís</span>
+        <span class="name" data-ca="Anís" data-en="Anise liqueur" data-fr="Anis" data-zh="茴香酒">Anís</span>
         <span class="c">1,60</span><span class="c">2,00</span><span class="c">3,40</span>
       </li>
       <li class="t3 reveal">
@@ -1725,11 +1722,11 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="c">1,60</span><span class="c">2,00</span><span class="c">3,40</span>
       </li>
       <li class="t3 reveal">
-        <span class="name">Orujo de hierbas</span>
+        <span class="name" data-ca="Orujo d’herbes" data-en="Herbal orujo" data-fr="Orujo aux herbes" data-zh="草本果渣酒">Orujo de hierbas</span>
         <span class="c">1,60</span><span class="c">2,00</span><span class="c">3,40</span>
       </li>
       <li class="t3 reveal">
-        <span class="name">Orujo crema</span>
+        <span class="name" data-ca="Crema d’orujo" data-en="Orujo cream liqueur" data-fr="Crème d’orujo" data-zh="奶油果渣酒">Orujo crema</span>
         <span class="c">1,90</span><span class="c">2,40</span><span class="c">4,10</span>
       </li>
       <li class="t3 reveal">
@@ -1745,7 +1742,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="c">2,00</span><span class="c">2,80</span><span class="c">4,40</span>
       </li>
       <li class="t3 reveal">
-        <span class="name">Vodka</span>
+        <span class="name" data-ca="Vodka" data-en="Vodka" data-fr="Vodka" data-zh="伏特加">Vodka</span>
         <span class="c">1,90</span><span class="c">2,40</span><span class="c">4,20</span>
       </li>
       <li class="t3 reveal">
@@ -1756,14 +1753,14 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     </section>
 
     <section id="cubatas">
-      <div class="sec-head"><div class="num">X</div><h2>Cubatas</h2><div class="sec-cat">Cubates</div><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">X</div><h2 data-ca="Cubates" data-en="Mixed drinks" data-fr="Long drinks" data-zh="调酒">Cubatas</h2><div class="rule"></div></div>
       <ul class="list">
       <li class="t2 head">
         <span class="name"></span>
-        <span class="c" data-ca="Baló">Balón</span><span class="c" data-ca="Tub">Tubo</span>
+        <span class="c" data-ca="Baló" data-en="Balloon" data-fr="Ballon" data-zh="球形杯">Balón</span><span class="c" data-ca="Tub" data-en="Tall" data-fr="Long" data-zh="高杯">Tubo</span>
       </li>
       <li class="t2 reveal">
-        <span class="name">Whisky</span>
+        <span class="name" data-ca="Whisky" data-en="Whisky" data-fr="Whisky" data-zh="威士忌">Whisky</span>
         <span class="c">6,20</span><span class="c">5,50</span>
       </li>
       <li class="t2 reveal">
@@ -1783,7 +1780,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="c">9,20</span><span class="c">8,40</span>
       </li>
       <li class="t2 reveal">
-        <span class="name">Ron Barceló</span>
+        <span class="name" data-ca="Rom Barceló" data-en="Barceló rum" data-fr="Rhum Barceló" data-zh="Barceló 朗姆酒">Ron Barceló</span>
         <span class="c">6,70</span><span class="c">6,10</span>
       </li>
       <li class="t2 reveal">
@@ -1823,7 +1820,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="c">7,20</span><span class="c">6,50</span>
       </li>
       <li class="t2 reveal">
-        <span class="name">Johnnie Walker negro</span>
+        <span class="name" data-ca="Johnnie Walker negre" data-en="Johnnie Walker Black Label" data-fr="Johnnie Walker Black Label" data-zh="尊尼获加黑牌">Johnnie Walker negro</span>
         <span class="c">8,20</span><span class="c">7,50</span>
       </li>
       <li class="t2 reveal">
@@ -1831,15 +1828,15 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         <span class="c">6,70</span><span class="c">6,10</span>
       </li>
       </ul>
-      <p class="sec-note" style="margin-top:16px" data-ca="Amb Red Bull · suplement +1,20 €">Con Red Bull · suplemento +1,20 €</p>
+      <p class="sec-note" style="margin-top:16px" data-ca="Amb Red Bull · suplement +1,20 €" data-en="With Red Bull · +1,20 € extra" data-fr="Avec Red Bull · supplément +1,20 €" data-zh="加红牛 · 另加 1,20 €">Con Red Bull · suplemento +1,20 €</p>
     </section>
 
     <section id="gintonic">
-      <div class="sec-head"><div class="num">XI</div><h2>Gin-tonic</h2><div class="sec-cat">Gintònic</div><div class="rule"></div></div>
+      <div class="sec-head"><div class="num">XI</div><h2 data-ca="Gintònic" data-en="Gin &amp; tonic" data-fr="Gin tonic" data-zh="金汤力">Gin-tonic</h2><div class="rule"></div></div>
       <ul class="list">
       <li class="t2 head">
         <span class="name"></span>
-        <span class="c" data-ca="Baló">Balón</span><span class="c" data-ca="Tub">Tubo</span>
+        <span class="c" data-ca="Baló" data-en="Balloon" data-fr="Ballon" data-zh="球形杯">Balón</span><span class="c" data-ca="Tub" data-en="Tall" data-fr="Long" data-zh="高杯">Tubo</span>
       </li>
       <li class="t2 reveal">
         <span class="name">Larios</span>
@@ -1876,7 +1873,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
   <footer>
     <div class="mark">✦</div>
-    <p data-ca="Preus en euros · IVA inclòs · Gràcies per la vostra visita">Precios en euros · IVA incluido · Gracias por su visita</p>
+    <p data-ca="Preus en euros · IVA inclòs · Gràcies per la vostra visita" data-en="Prices in euros · VAT included · Thank you for your visit" data-fr="Prix en euros · TVA incluse · Merci de votre visite" data-zh="价格以欧元计 · 含增值税 · 感谢光临">Precios en euros · IVA incluido · Gracias por su visita</p>
   </footer>
 
 </div>
@@ -1887,11 +1884,10 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <span data-i18n="search">Buscar</span>
   </button>
-  <div class="lang" id="lang" role="group" data-i18n-label="lang" aria-label="Idioma" data-lang="es">
-    <span class="knob" aria-hidden="true"></span>
-    <button type="button" data-lang="es" lang="es" aria-pressed="true">ES</button>
-    <button type="button" data-lang="ca" lang="ca" aria-pressed="false">CA</button>
-  </div>
+  <button type="button" class="d-lang" id="lang-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu" aria-label="Idioma: Español">
+    <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z"/></svg>
+    <span id="lang-code">ES</span>
+  </button>
   <button type="button" id="theme-btn" data-i18n-label="theme" aria-label="Cambiar modo claro u oscuro">
     <svg class="i i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
     <svg class="i i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
@@ -1899,6 +1895,16 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   <button type="button" class="d-top" id="top-btn" data-i18n-label="top" aria-label="Volver arriba">
     <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg>
   </button>
+</div>
+
+<!-- Menú de idiomas -->
+<div class="lang-menu" id="lang-menu" role="menu" aria-labelledby="lang-btn" inert>
+  <p class="lm-title" data-i18n="lang">Idioma</p>
+  <button type="button" role="menuitemradio" data-lang="es" lang="es" aria-checked="true"><span class="lm-name">Español</span><span class="lm-check" aria-hidden="true"></span></button>
+  <button type="button" role="menuitemradio" data-lang="ca" lang="ca" aria-checked="false"><span class="lm-name">Català</span><span class="lm-check" aria-hidden="true"></span></button>
+  <button type="button" role="menuitemradio" data-lang="en" lang="en" aria-checked="false"><span class="lm-name">English</span><span class="lm-check" aria-hidden="true"></span></button>
+  <button type="button" role="menuitemradio" data-lang="fr" lang="fr" aria-checked="false"><span class="lm-name">Français</span><span class="lm-check" aria-hidden="true"></span></button>
+  <button type="button" role="menuitemradio" data-lang="zh" lang="zh-Hans" aria-checked="false"><span class="lm-name">中文</span><span class="lm-check" aria-hidden="true"></span></button>
 </div>
 
 <!-- Buscador -->
@@ -1937,7 +1943,6 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     <div class="lb-info" id="lb-info">
       <p class="lb-count" id="lb-count"></p>
       <h3 class="lb-name" id="lb-name"></h3>
-      <p class="lb-cat" id="lb-cat"></p>
       <div class="lb-foot"><span class="lb-units" id="lb-units"></span><span class="lb-price" id="lb-price"></span></div>
       <p class="lb-hint" data-i18n="swipe">← Desliza para ver más platos →</p>
     </div>
@@ -1973,9 +1978,15 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     root.style.scrollBehavior = prev;
   }
 
-  // ---------- Textos en castellano y catalán ----------
+  // ---------- Textos de la página en cada idioma ----------
+  // (los nombres de platos y bebidas están en el HTML, en los atributos data-ca, data-en, data-fr y data-zh)
+  const LANGS = ['es', 'ca', 'en', 'fr', 'zh'];
+  const LANG_NAMES = { es: 'Español', ca: 'Català', en: 'English', fr: 'Français', zh: '中文' };
+  const LANG_CODES = { es: 'ES', ca: 'CA', en: 'EN', fr: 'FR', zh: '中文' };
+  const HTML_LANG = { es: 'es', ca: 'ca', en: 'en', fr: 'fr', zh: 'zh-Hans' };
   const T = {
     es: {
+      title: 'Carta · La Cronica', units: n => n + ' ud.',
       food: 'Para comer', drink: 'Para beber',
       dishes: n => n + (n === 1 ? ' plato' : ' platos'),
       drinks: n => n + (n === 1 ? ' bebida' : ' bebidas'),
@@ -1991,6 +2002,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       theme: 'Cambiar modo claro u oscuro', clear: 'Borrar búsqueda', searchLabel: 'Buscar en la carta', lang: 'Idioma'
     },
     ca: {
+      title: 'Carta · La Cronica', units: n => n + ' u.',
       food: 'Per menjar', drink: 'Per beure',
       dishes: n => n + (n === 1 ? ' plat' : ' plats'),
       drinks: n => n + (n === 1 ? ' beguda' : ' begudes'),
@@ -2004,23 +2016,77 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       swipe: '← Llisca per veure més plats →',
       close: 'Tancar', prev: 'Anterior', next: 'Següent', top: 'Tornar a dalt',
       theme: 'Canviar mode clar o fosc', clear: 'Esborrar la cerca', searchLabel: 'Cercar a la carta', lang: 'Idioma'
+    },
+    en: {
+      title: 'Menu · La Cronica', units: n => n + ' pcs',
+      food: 'To eat', drink: 'To drink',
+      dishes: n => n + (n === 1 ? ' dish' : ' dishes'),
+      drinks: n => n + (n === 1 ? ' drink' : ' drinks'),
+      search: 'Search', placeholder: 'Search for a dish or a drink…', cancel: 'Cancel',
+      searchHint: 'Type to search the whole menu',
+      results: n => n === 0 ? 'No results' : n === 1 ? '1 result · tap it to see it on the menu' : n + ' results · tap one to see it on the menu',
+      empty: q => 'We couldn’t find “' + q + '”',
+      seeAll: 'See the whole menu',
+      photos: 'Photos', list: 'List', view: 'View',
+      colHint: 'Tap a size to highlight its prices',
+      swipe: '← Swipe to see more dishes →',
+      close: 'Close', prev: 'Previous', next: 'Next', top: 'Back to top',
+      theme: 'Switch light or dark mode', clear: 'Clear search', searchLabel: 'Search the menu', lang: 'Language'
+    },
+    fr: {
+      title: 'Carte · La Cronica', units: n => n + ' pcs',
+      food: 'À manger', drink: 'À boire',
+      dishes: n => n + (n === 1 ? ' plat' : ' plats'),
+      drinks: n => n + (n === 1 ? ' boisson' : ' boissons'),
+      search: 'Chercher', placeholder: 'Cherchez un plat ou une boisson…', cancel: 'Annuler',
+      searchHint: 'Tapez pour chercher dans toute la carte',
+      results: n => n === 0 ? 'Aucun résultat' : n === 1 ? '1 résultat · touchez-le pour le voir sur la carte' : n + ' résultats · touchez-en un pour le voir sur la carte',
+      empty: q => 'Nous n’avons pas trouvé « ' + q + ' »',
+      seeAll: 'Voir toute la carte',
+      photos: 'Photos', list: 'Liste', view: 'Affichage',
+      colHint: 'Touchez une taille pour voir ses prix',
+      swipe: '← Faites glisser pour voir d’autres plats →',
+      close: 'Fermer', prev: 'Précédent', next: 'Suivant', top: 'Retour en haut',
+      theme: 'Mode clair ou sombre', clear: 'Effacer la recherche', searchLabel: 'Chercher dans la carte', lang: 'Langue'
+    },
+    zh: {
+      title: '菜单 · La Cronica', units: n => n + '个',
+      food: '美食', drink: '饮品',
+      dishes: n => n + ' 道菜',
+      drinks: n => n + ' 款饮品',
+      search: '搜索', placeholder: '搜索菜品或饮品…', cancel: '取消',
+      searchHint: '输入文字即可搜索整份菜单',
+      results: n => n === 0 ? '没有结果' : n + ' 个结果 · 点击即可在菜单中查看',
+      empty: q => '没有找到“' + q + '”',
+      seeAll: '查看完整菜单',
+      photos: '图片', list: '列表', view: '视图',
+      colHint: '点击杯型即可突出显示价格',
+      swipe: '← 左右滑动查看更多菜品 →',
+      close: '关闭', prev: '上一个', next: '下一个', top: '返回顶部',
+      theme: '切换浅色或深色模式', clear: '清除搜索', searchLabel: '搜索菜单', lang: '语言'
     }
   };
 
-  // Icono y nombre en catalán de cada sección
+  // Icono de cada sección (los nombres traducidos están en los enlaces de la barra)
   const META = {
-    tapas: { ico: '🍢', ca: 'Tapes', food: true },
-    combinados: { ico: '🍳', ca: 'Combinats', food: true },
-    china: { ico: '🥡', ca: 'Menjar xinès', food: true },
-    bocadillos: { ico: '🥖', ca: 'Entrepans', food: true },
-    vinos: { ico: '🍷', ca: 'Vins i caves' },
-    cerveza: { ico: '🍺', ca: 'Cervesa' },
-    cafe: { ico: '☕', ca: 'Cafè i te' },
-    refrescos: { ico: '🥤', ca: 'Refrescos' },
-    copas: { ico: '🥃', ca: 'Copes' },
-    cubatas: { ico: '🍹', ca: 'Cubates' },
-    gintonic: { ico: '🍸', ca: 'Gintònic' }
+    tapas: { ico: '🍢', food: true },
+    combinados: { ico: '🍳', food: true },
+    china: { ico: '🥡', food: true },
+    bocadillos: { ico: '🥖', food: true },
+    vinos: { ico: '🍷' },
+    cerveza: { ico: '🍺' },
+    cafe: { ico: '☕' },
+    refrescos: { ico: '🥤' },
+    copas: { ico: '🥃' },
+    cubatas: { ico: '🍹' },
+    gintonic: { ico: '🍸' }
   };
+
+  // Guarda el texto original (castellano) de todo lo traducible
+  const trEls = $$('[data-ca],[data-en],[data-fr],[data-zh]');
+  trEls.forEach(el => { if (!('es' in el.dataset)) el.dataset.es = el.textContent.trim(); });
+  const tr = (el, l) => (el.dataset[l] || el.dataset.es);
+  const allLangs = el => LANGS.map(l => el.dataset[l] || '').join(' ');
 
   const ICON = {
     grid: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>',
@@ -2033,9 +2099,10 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     const id = a.dataset.target, sec = document.getElementById(id);
     if (!sec) return;
     const m = META[id] || {};
-    const es = a.textContent.trim();
-    info.set(id, { es, ca: m.ca || es, ico: m.ico || '✦', food: !!m.food, count: $$(ITEM_SEL, sec).length });
+    if (!('es' in a.dataset)) a.dataset.es = a.textContent.trim();
+    info.set(id, { link: a, ico: m.ico || '✦', food: !!m.food, count: $$(ITEM_SEL, sec).length });
   });
+  const secLabel = (id, l) => { const m = info.get(id); return m ? tr(m.link, l) : ''; };
 
   // ---------- Accesos rápidos de la portada ----------
   const labelled = [];
@@ -2089,24 +2156,10 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   });
   $$('.dish').forEach(li => { li.tabIndex = 0; li.setAttribute('role', 'button'); li.setAttribute('aria-haspopup', 'dialog'); });
 
-  // ---------- Parejas castellano / catalán ----------
-  const pairs = [];
-  $$('.dish').forEach(li => {
-    const n = $('.dish-name', li), c = $('.dish-cat', li);
-    if (n && c) pairs.push({ a: n, b: c, es: n.textContent.trim(), ca: c.textContent.trim() });
-  });
-  $$('.name, .subhead').forEach(el => {
-    const c = el.querySelector(':scope > small.cat');
-    if (!c) return;
-    const span = document.createElement('span');
-    span.className = 'main';
-    Array.from(el.childNodes).forEach(node => { if (node !== c) span.appendChild(node); });
-    el.insertBefore(span, c);
-    pairs.push({ a: span, b: c, es: span.textContent.trim(), ca: c.textContent.trim() });
-  });
-  $$('.sec-head').forEach(h => {
-    const h2 = $('h2', h), c = $('.sec-cat', h);
-    if (h2 && c) pairs.push({ a: h2, b: c, es: h2.textContent.trim(), ca: c.textContent.trim() });
+  // Unidades ("8 ud.") en cada idioma
+  const unitEls = $$('.dish-units').map(el => {
+    const m = el.textContent.match(/\d+/);
+    return { el, n: m ? m[0] : null, es: el.textContent };
   });
 
   // ---------- Navegación: indicador, progreso y sección activa ----------
@@ -2236,13 +2289,18 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   const searchbar = $('#searchbar'), input = $('#q'), field = $('.sb-field'), meta = $('#sb-meta');
   const emptyText = $('#empty-text');
   const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  // Se busca en todos los idiomas a la vez: "cheese", "queso" o "奶酪" encuentran lo mismo
   const index = sections.map(sec => {
     const m = info.get(sec.id);
-    const title = norm($$('h2, .sec-cat', sec).map(e => e.textContent).join(' ') + ' ' + (m ? m.es + ' ' + m.ca : ''));
+    const h2 = $('h2', sec);
+    const title = norm((h2 ? h2.textContent + ' ' + allLangs(h2) : '') + ' ' + (m ? m.link.dataset.es + ' ' + allLangs(m.link) : ''));
     return {
       sec,
       subs: $$('.subhead', sec),
-      items: $$(ITEM_SEL, sec).map(li => ({ li, full: norm(li.textContent) + ' ' + title }))
+      items: $$(ITEM_SEL, sec).map(li => ({
+        li,
+        full: norm(li.textContent + ' ' + $$('[data-es]', li).map(allLangs).join(' ')) + ' ' + title
+      }))
     };
   });
   let searching = false, savedY = 0;
@@ -2279,6 +2337,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   function openSearch() {
     if (searching) return;
     if (lbOpen) closeLb();
+    closeMenu();
     savedY = window.scrollY;
     searching = true;
     searchbar.removeAttribute('inert');
@@ -2319,16 +2378,16 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   function renderLb() {
     const li = lbList[lbIndex];
     if (!li) return;
-    const img = $('img', li), units = $('.dish-units', li), cat = $('.dish-cat', li);
-    const sec = li.closest('section'), m = sec && info.get(sec.id);
+    const img = $('img', li), units = $('.dish-units', li);
+    const sec = li.closest('section');
+    const name = $('.dish-name', li).textContent;
     lbImg.src = img.currentSrc || img.src;
-    lbImg.alt = img.alt;
-    $('#lb-name').textContent = $('.dish-name', li).textContent;
-    $('#lb-cat').textContent = cat ? cat.textContent : '';
+    lbImg.alt = name;
+    $('#lb-name').textContent = name;
     $('#lb-units').textContent = units ? units.textContent : '';
     $('#lb-units').hidden = !units;
     $('#lb-price').textContent = $('.price', li).textContent;
-    $('#lb-count').textContent = (m ? (lang === 'ca' ? m.ca : m.es) + ' · ' : '') + (lbIndex + 1) + ' / ' + lbList.length;
+    $('#lb-count').textContent = (sec && info.has(sec.id) ? secLabel(sec.id, lang) + ' · ' : '') + (lbIndex + 1) + ' / ' + lbList.length;
     lb.classList.toggle('single', lbList.length < 2);
   }
   function openLb(li) {
@@ -2475,33 +2534,44 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   });
 
   // ---------- Idioma ----------
-  const langSwitch = $('#lang');
-  let lang = store.get('lang') === 'ca' ? 'ca' : 'es';
-  function setLang(l, animate) {
+  const langBtn = $('#lang-btn'), langMenu = $('#lang-menu'), langCode = $('#lang-code');
+
+  // Primera visita: se abre en el idioma del móvil si es uno de los disponibles
+  function detectLang() {
+    const saved = store.get('lang');
+    if (LANGS.includes(saved)) return saved;
+    const prefs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'es'];
+    for (const p of prefs) {
+      const base = String(p).toLowerCase().split('-')[0];
+      if (LANGS.includes(base)) return base;
+    }
+    return 'es';
+  }
+  let lang = detectLang();
+
+  function setLang(l, animate, remember) {
     lang = l;
-    root.lang = l;
-    const t = T[l], ca = l === 'ca';
-    pairs.forEach(p => { p.a.textContent = ca ? p.ca : p.es; p.b.textContent = ca ? p.es : p.ca; });
-    $$('[data-ca]').forEach(el => {
-      if (!('es' in el.dataset)) el.dataset.es = el.textContent;
-      el.textContent = ca ? el.dataset.ca : el.dataset.es;
-    });
+    root.lang = HTML_LANG[l];
+    const t = T[l];
+    document.title = t.title;
+    trEls.forEach(el => { el.textContent = tr(el, l); });
+    unitEls.forEach(u => { u.el.textContent = u.n ? t.units(u.n) : u.es; });
     $$('[data-i18n]').forEach(el => { const v = t[el.dataset.i18n]; if (typeof v === 'string') el.textContent = v; });
     $$('[data-i18n-label]').forEach(el => el.setAttribute('aria-label', t[el.dataset.i18nLabel]));
     $$('[data-i18n-ph]').forEach(el => el.setAttribute('placeholder', t[el.dataset.i18nPh]));
-    links.forEach(a => { const m = info.get(a.dataset.target); if (m) a.textContent = ca ? m.ca : m.es; });
     labelled.forEach(({ el, id }) => {
       const m = info.get(id);
-      $('.t', el).textContent = ca ? m.ca : m.es;
+      $('.t', el).textContent = secLabel(id, l);
       $('.n', el).textContent = m.food ? t.dishes(m.count) : m.count;
     });
     sections.forEach(sec => {
       const c = $('.sec-count', sec), m = info.get(sec.id);
       if (c && m) c.textContent = (m.food ? t.dishes : t.drinks)(m.count);
     });
-    langSwitch.dataset.lang = l;
-    $$('button', langSwitch).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
-    store.set('lang', l);
+    langCode.textContent = LANG_CODES[l];
+    langBtn.setAttribute('aria-label', t.lang + ': ' + LANG_NAMES[l]);
+    $$('button[data-lang]', langMenu).forEach(b => b.setAttribute('aria-checked', String(b.dataset.lang === l)));
+    if (remember) store.set('lang', l);
     requestAnimationFrame(moveIndicator);
     if (lbOpen) renderLb();
     if (searching) runSearch();
@@ -2509,10 +2579,43 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       main.animate([{ opacity: 0.3 }, { opacity: 1 }], { duration: 380, easing: 'ease-out' });
     }
   }
-  langSwitch.addEventListener('click', e => {
+
+  // Menú de idiomas
+  let menuOpen = false;
+  function openMenu() {
+    menuOpen = true;
+    langMenu.removeAttribute('inert');
+    langMenu.classList.add('open');
+    langBtn.setAttribute('aria-expanded', 'true');
+    const cur = $('button[aria-checked="true"]', langMenu) || $('button', langMenu);
+    cur.focus({ preventScroll: true });
+  }
+  function closeMenu(focusBtn) {
+    if (!menuOpen) return;
+    menuOpen = false;
+    langMenu.classList.remove('open');
+    langMenu.setAttribute('inert', '');
+    langBtn.setAttribute('aria-expanded', 'false');
+    if (focusBtn) langBtn.focus({ preventScroll: true });
+  }
+  langBtn.addEventListener('click', () => (menuOpen ? closeMenu() : openMenu()));
+  langMenu.addEventListener('click', e => {
     const b = e.target.closest('button[data-lang]');
-    if (b && b.dataset.lang !== lang) setLang(b.dataset.lang, true);
+    if (!b) return;
+    if (b.dataset.lang !== lang) setLang(b.dataset.lang, true, true);
+    closeMenu(true);
   });
+  langMenu.addEventListener('keydown', e => {
+    const items = $$('button[data-lang]', langMenu), i = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') { e.preventDefault(); items[(i + 1) % items.length].focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeMenu(true); }
+    else if (e.key === 'Tab') closeMenu();
+  });
+  document.addEventListener('click', e => {
+    if (menuOpen && !langMenu.contains(e.target) && !langBtn.contains(e.target)) closeMenu();
+  });
+  addEventListener('scroll', () => closeMenu(), { passive: true });
 
   // ---------- Modo claro / oscuro ----------
   const themeBtn = $('#theme-btn');
@@ -2541,7 +2644,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   $('#top-btn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: smooth() }));
 
   // ---------- Arranque ----------
-  setLang(lang, false);
+  setLang(lang, false, false);
   setView(view);
   paintMeta();
   measure();
